@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
 
     private String subreddit = "nycstreetart";
     private Toolbar toolbar;
+    private ImageAdapter imageAdapter;
 
     View view;
     @Override
@@ -122,16 +123,23 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
     public void processFinish(ImgurContainer imgurContainers) {
         Log.i("MyMainActivity", "processFinish");
         Log.i("MyMainActivity", "imgurContainers " + imgurContainers.getImgurData().size());
-        Log.i("MyMainActivity", "imgurContainers " + imgurContainers.getImgurData().get(0).getLink());
 
 
+        if(imgurContainers.getImgurData().size()  == 0 ){
+
+            Snackbar.make(view, "Try a diferent subreddit", Snackbar.LENGTH_LONG).show();
 
 
+        }else {
 
-        gridview.setAdapter(new ImageAdapter(mContext, imgurContainers));
+            imgurContainers.setSubRedditName(subreddit);
+            imageAdapter = null;
+            Log.i("MyMainActivity", "imgurContainers " + imgurContainers.getImgurData().get(0).getLink());
+            imageAdapter = new ImageAdapter(mContext, imgurContainers);
+            gridview.setAdapter(imageAdapter);
 
 
-
+        }
 
     }
 

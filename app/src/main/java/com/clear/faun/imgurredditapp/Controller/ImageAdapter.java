@@ -52,36 +52,51 @@ public class ImageAdapter extends BaseAdapter {
     Inflater inflater;
     int width = 0;
     int height = 0;
+    private String currentSubName = "nycstreetart";
 
     @Override
     public View getView(int position, View recycled, ViewGroup container) {
         Log.d("MyImageAdapter", "getView() pos " + position);
         final ImageView myImageView;
+
+
+       /* //clear if running a new sub.
+        if(!imgurContainers.getSubRedditName().equals(currentSubName)
+                &&position == 0 ){
+            Glide.clear(recycled);
+            currentSubName = imgurContainers.getSubRedditName();
+        }*/
+
+
         if (recycled == null) {
+
+            Log.d("MyImageAdapter", "recycled == null" );
             myImageView = new ImageView(mContext);
             myImageView.setScaleType(CENTER_CROP);
         }else {
+            Log.d("MyImageAdapter", "else");
+
             myImageView = (ImageView) recycled;
+
         }
 
-
-
-        if(width == 0){
+        if (width == 0) {
             width = getScreenWidth() / 2;
             height = width;
         }
 
 
-        //Log.d("MyImageAdapter", "screen width :)" + width);
-
         String url = imgurContainers.getImgurData().get(position).getLink();
 
-      /*  Picasso.with(mContext)
-                .load(url)
-                .resize(width, height)
-                .centerCrop()
-                //.centerInside()
-                .into(myImageView);*/
+  /*  Picasso.with(mContext)
+            .load(url)
+            .resize(width, height)
+            .centerCrop()
+            //.centerInside()
+            .into(myImageView);*/
+
+
+
 
         Glide.with(mContext)
                 .load(url)
@@ -91,12 +106,6 @@ public class ImageAdapter extends BaseAdapter {
                 .into(myImageView);
 
 
-      /*  Glide.with(mContext)
-                .load(url)
-                //.override(width, height)
-                .centerCrop()
-                .crossFade()
-                .into(myImageView);*/
 
         return myImageView;
     }

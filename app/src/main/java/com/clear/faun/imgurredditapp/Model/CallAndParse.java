@@ -22,7 +22,7 @@ public class CallAndParse {
 
     private final String API = "https://api.imgur.com";
 
-    private String subreddit;
+    String subreddit;
 
     public CallAndParse(String subreddit){
 
@@ -54,6 +54,7 @@ public class CallAndParse {
                 Log.i("MyCallAndParse", "success");
 
                 Log.i("MyCallAndParse", "dC " + imgurContainers.getImgurData().size());
+
 
                 delegate.processFinish(imgurContainers);
 

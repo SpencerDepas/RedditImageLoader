@@ -11,6 +11,15 @@ public class ImgurContainer {
 
     //public List<ImgurData> data;
 
+    private String subRedditName = "nycstreetart";
+
+    public String getSubRedditName(){
+        return subRedditName;
+    }
+
+    public void setSubRedditName(String subRedditName){
+        this.subRedditName = subRedditName;
+    }
 
     @SerializedName(value="data")
     private List<ImgurData> data;
