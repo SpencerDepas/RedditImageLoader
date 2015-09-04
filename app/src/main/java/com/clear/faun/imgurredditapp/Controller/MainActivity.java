@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
         view = this.getWindow().getDecorView();
         view.setBackgroundColor(Color.WHITE);
 
-
+        //final String API_KEY = getApplicationContext().getString(R.string.API_KEY_IMGUR);
         callAndParse = new CallAndParse(subreddit);
         callAndParse.delegate = this;
 

@@ -1,5 +1,7 @@
 package com.clear.faun.imgurredditapp.Model;
 
+import com.clear.faun.imgurredditapp.R;
+
 import retrofit.Callback;
 import retrofit.http.GET;
 import retrofit.http.Headers;
@@ -10,7 +12,9 @@ import retrofit.http.Path;
  */
 public interface ImgurAPI {
 
-    @Headers("Authorization: Client-ID 3d5419ceff3c88f")
+
+
+    @Headers("Authorization: Client-ID API_KEY")
     @GET("/3/gallery/r/{subreddit}/time/0.json")//here is the other url part.best way is to start using /
     public void getFeed(@Path("subreddit") String subreddit, Callback<ImgurContainer> response);
 
