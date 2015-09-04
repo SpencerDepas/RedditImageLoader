@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:theme="@style/Base.Theme.DesignDemo"
+    android:id="@+id/layout_root"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:padding="40dp" >
+
+    <TextView
+        android:id="@+id/change_sub"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#9E9E9E"
+        android:text="Enter SUBREDDIT"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <EditText
+        android:layout_below="@+id/change_sub"
+        android:layout_centerInParent="true"
+        android:id="@+id/editTextDialogUserInput"
+        android:hint="SUBREDDIT"
+        android:textColor="#9E9E9E"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        >
+
+
+
+        <requestFocus />
+
+    </EditText>
+
+    <TextView
+        android:layout_below="@+id/editTextDialogUserInput"
+        android:layout_centerInParent="true"
+        android:visibility="invisible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="70dp"
+        >
+
+
+    </TextView>
+
+
+</RelativeLayout>
