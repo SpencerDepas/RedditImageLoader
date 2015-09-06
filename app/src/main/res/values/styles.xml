@@ -14,11 +14,41 @@
     </style>
 
     <style name="MyAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <!-- Used for the buttons -->
-        <item name="colorAccent">#FFFFFF</item>
-        <!-- Used for the title and text -->
-        <item name="android:textColorPrimary">#9E9E9E</item>
-        <!-- Used for the background -->
-        <item name="android:background">#9E9E9E</item>
+        <item name="colorPrimary">#9E9E9E</item>
+        <item name="colorPrimaryDark">#616161</item>
+        <item name="colorAccent">#00BCD4</item>
+        <item name="android:textColorPrimary">#FFFFFF</item>
+        <item name="android:windowBackground">@color/window_background</item>
+        <item name="android:textColorAlertDialogListItem">#00BCD4</item>
+        <item name="textColorAlertDialogListItem">#00BCD4</item>
     </style>
+
+
+
+
+    <style name="ExpandedAppBar" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textSize">28sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="CollapsedAppBar" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="ExpandedAppBarPlus1" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textSize">28.5sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="CollapsedAppBarPlus1" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textSize">24.5sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+
 </resources>

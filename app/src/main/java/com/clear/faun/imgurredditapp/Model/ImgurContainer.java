@@ -14,7 +14,7 @@ public class ImgurContainer {
     private String subRedditName = "nycstreetart";
 
     public String getSubRedditName(){
-        return subRedditName;
+        return subRedditName.toUpperCase();
     }
 
     public void setSubRedditName(String subRedditName){

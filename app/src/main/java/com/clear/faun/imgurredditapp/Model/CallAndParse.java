@@ -55,6 +55,9 @@ public class CallAndParse {
 
                 Log.i("MyCallAndParse", "dC " + imgurContainers.getImgurData().size());
 
+                /*for(int i = 0; i < imgurContainers.getImgurData().size(); i ++){
+                    Log.i("MyCallAndParse", "dC " + imgurContainers.getImgurData().get(i).getLink());
+                }*/
 
                 delegate.processFinish(imgurContainers);
 

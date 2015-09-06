@@ -2,10 +2,16 @@ package com.clear.faun.imgurredditapp.Controller;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
+import android.os.Handler;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,6 +27,10 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 
+import android.view.Menu;
+import android.view.MenuItem;
+
+
 import com.bumptech.glide.Glide;
 import com.clear.faun.imgurredditapp.Model.CallAndParse;
 import com.clear.faun.imgurredditapp.Model.ImgurContainer;
@@ -28,6 +38,8 @@ import com.clear.faun.imgurredditapp.Model.ImgurResponse;
 import com.clear.faun.imgurredditapp.R;
 
 public class MainActivity extends AppCompatActivity implements ImgurResponse {
+
+    private DrawerLayout mDrawerLayout;
 
     private Context mContext;
     //private GridView gridview;
@@ -38,44 +50,49 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
     private Toolbar toolbar;
     private ImageAdapter imageAdapter;
     private RecyclerView rv;
-
+    private CollapsingToolbarLayout collapsingToolbar;
 
     View view;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.test);
+        setContentView(R.layout.activity_main);
         Log.i("MyMainActivity", "onCreate   ");
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("NYCSTREETART");
+        //toolbar.setTitle("NYCSTREETART");
         setSupportActionBar(toolbar);
 
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        CollapsingToolbarLayout collapsingToolbar =
-                (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        imageView = (ImageView) findViewById(R.id.backdrop);
+        mContext = getApplicationContext();
+
+
+        collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         collapsingToolbar.setTitle("NYCSTREETART");
+
         //collapsingToolbar.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
 
 
+        final ActionBar ab = getSupportActionBar();
+        ab.setHomeAsUpIndicator(R.drawable.ic_menu);
+        ab.setDisplayHomeAsUpEnabled(true);
+
+
+        final View coordinatorLayoutView = findViewById(R.id.main_content);
+
+        view = this.getWindow().getDecorView();
+
+
         rv = (RecyclerView)findViewById(R.id.rv);
-        /*LinearLayoutManager llm = new LinearLayoutManager(mContext);
-        rv.setLayoutManager(llm);*/
         rv.setLayoutManager(new GridLayoutManager(this, 2));
 
 
-        mContext = getApplicationContext();
-
-        view = this.getWindow().getDecorView();
-        view.setBackgroundColor(Color.WHITE);
-
-        //final String API_KEY = getApplicationContext().getString(R.string.API_KEY_IMGUR);
         callAndParse = new CallAndParse(subreddit);
         callAndParse.delegate = this;
 
-        imageView = (ImageView) findViewById(R.id.backdrop);
-        //gridview = (GridView) findViewById(R.id.gridview);
+        //Snackbar.make(coordinatorLayoutView, "Hello Snackbar", Snackbar.LENGTH_LONG).show();
+
 
 
         findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
@@ -109,10 +126,10 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
 
 
 
-                                        subreddit = subredditEditText.getText().toString();
-
-                                        toolbar.setTitle(subreddit.toUpperCase());
-                                        setSupportActionBar(toolbar);
+                                        subreddit = subredditEditText.getText().toString().toUpperCase();
+                                        //collapsingToolbar.setTitle(subreddit);
+                                        /*toolbar.setTitle(subreddit.toUpperCase());
+                                        setSupportActionBar(toolbar);*/
 
                                         callAndParse = new CallAndParse(subreddit);
                                         callAndParse.delegate = MainActivity.this;
@@ -141,40 +158,73 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
         });
     }
 
-    @Override
-    public void processFinish(ImgurContainer imgurContainers) {
-        Log.i("MyMainActivity", "processFinish");
-        Log.i("MyMainActivity", "imgurContainers " + imgurContainers.getImgurData().size());
 
 
-        if(imgurContainers.getImgurData().size()  == 0 ){
-
-            Snackbar.make(view, "Try a diferent subreddit", Snackbar.LENGTH_LONG).show();
-
-
-        }else {
-
-            imgurContainers.setSubRedditName(subreddit);
-            imageAdapter = null;
-            Log.i("MyMainActivity", "imgurContainers " + imgurContainers.getImgurData().get(0).getLink());
+        @Override
+        public void processFinish (ImgurContainer imgurContainers){
+            Log.i("MyMainActivity", "processFinish");
+            Log.i("MyMainActivity", "imgurContainers " + imgurContainers.getImgurData().size());
 
 
+            if (imgurContainers.getImgurData().size() == 0) {
 
-            Glide.with(mContext)
-            .load(imgurContainers.getImgurData().get(0).getLink())
-            .centerCrop()
-            .crossFade()
-            .into(imageView);
-
-            imageAdapter = new ImageAdapter(mContext, imgurContainers);
-            //gridview.setAdapter(imageAdapter);
+                Snackbar.make(view, "Try a diferent subreddit", Snackbar.LENGTH_LONG).show();
 
 
-            RVAdapter rvAdapter = new RVAdapter(imgurContainers, mContext);
-            rv.setAdapter(rvAdapter);
+            } else {
+
+                imgurContainers.setSubRedditName(subreddit);
+                imageAdapter = null;
+                Log.i("MyMainActivity", "imgurContainers " + imgurContainers.getImgurData().get(0).getLink());
+
+                collapsingToolbar.setTitle(imgurContainers.getSubRedditName());
+                collapsingToolbar.setExpandedTitleTextAppearance(R.style.ExpandedAppBar);
+                collapsingToolbar.setCollapsedTitleTextAppearance(R.style.CollapsedAppBar);
+                //toolbar.setTitle(imgurContainers.getSubRedditName());
+
+
+                Glide.with(mContext)
+                        .load(imgurContainers.getImgurData().get(0).getLink())
+                        .centerCrop()
+                        .crossFade()
+                        .into(imageView);
+
+
+                imgurContainers.getImgurData().remove(0);
+
+                //old way
+                //imageAdapter = new ImageAdapter(mContext, imgurContainers);
+                //gridview.setAdapter(imageAdapter);
+
+
+                RVAdapter rvAdapter = new RVAdapter(imgurContainers, mContext);
+                rv.setAdapter(rvAdapter);
+            }
+
         }
 
-    }
+
+        @Override
+        public boolean onOptionsItemSelected (MenuItem item){
+            Log.d("MyMainActivity", "item " + item.getItemId());
+
+            if (item.getItemId() == android.R.id.home) {
+                Log.d("MyMainActivity", "item.getItemId() == android.R.id.home");
+
+                Snackbar.make(view, "Not Yet!", Snackbar.LENGTH_LONG).show();
+                return true;
+            } else {
+                Log.d("MyMainActivity", "Logout");
+
+                return true;
+            }
+
+
+            //return super.onOptionsItemSelected(item);
+        }
+
+
+
 
 
 

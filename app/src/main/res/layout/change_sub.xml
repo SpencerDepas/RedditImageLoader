@@ -1,47 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:theme="@style/Base.Theme.DesignDemo"
+    android:theme="@style/MyAlertDialogStyle"
     android:id="@+id/layout_root"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:padding="40dp" >
+    android:padding="48dp" >
 
     <TextView
         android:id="@+id/change_sub"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#9E9E9E"
-        android:text="Enter SUBREDDIT"
+        android:text="Enter your favorite subreddit"
+        android:layout_marginBottom="50dp"
+
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <EditText
+
+    <RelativeLayout
         android:layout_below="@+id/change_sub"
         android:layout_centerInParent="true"
-        android:id="@+id/editTextDialogUserInput"
-        android:hint="SUBREDDIT"
-        android:textColor="#9E9E9E"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        >
+        android:layout_height="wrap_content">
+
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvv"
+                android:text="/r/"
+                android:textColor="#9E9E9E"
+                />
+
+            <EditText
+                android:id="@+id/editTextDialogUserInput"
+                android:layout_toRightOf="@+id/tvv"
+                android:hint="subreddit"
+                android:textColor="#9E9E9E"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                >
+                <requestFocus />
+            </EditText>
+        </LinearLayout>
 
 
 
-        <requestFocus />
-
-    </EditText>
-
-    <TextView
-        android:layout_below="@+id/editTextDialogUserInput"
-        android:layout_centerInParent="true"
-        android:visibility="invisible"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingBottom="70dp"
-        >
 
 
-    </TextView>
+    </RelativeLayout>
+
+
+
 
 
 </RelativeLayout>
