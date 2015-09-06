@@ -26,12 +26,13 @@ public class ImageAdapter extends BaseAdapter {
 
     private Context mContext;
     ImgurContainer imgurContainers;
-
+    private ImageView myImageView;
 
     // Constructor
-    public ImageAdapter(Context c, ImgurContainer imgurContainers) {
+    public ImageAdapter(Context mContext, ImgurContainer imgurContainers) {
         Log.i("MyImageAdapter", "ImageAdapter Constructor");
-        mContext = c;
+
+        this.mContext = mContext;
         this.imgurContainers = imgurContainers;
 
 
@@ -57,7 +58,7 @@ public class ImageAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View recycled, ViewGroup container) {
         Log.d("MyImageAdapter", "getView() pos " + position);
-        final ImageView myImageView;
+
 
 
        /* //clear if running a new sub.
@@ -96,7 +97,8 @@ public class ImageAdapter extends BaseAdapter {
             .into(myImageView);*/
 
 
-
+       // img.setImageBitmap(decodeSampleBitmapFromResource(R.drawable.dog_animation, width, height));
+//dont forge
 
         Glide.with(mContext)
                 .load(url)
@@ -110,7 +112,7 @@ public class ImageAdapter extends BaseAdapter {
         return myImageView;
     }
 
-    public int getScreenWidth(){
+    private int getScreenWidth(){
         WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
         Point size = new Point();

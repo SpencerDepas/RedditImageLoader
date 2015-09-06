@@ -27,4 +27,7 @@ public class ImgurData {
         this.link = link;
     }
 
+
+
+
 }

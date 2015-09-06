@@ -7,6 +7,9 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,13 +28,14 @@ import com.clear.faun.imgurredditapp.R;
 public class MainActivity extends AppCompatActivity implements ImgurResponse {
 
     private Context mContext;
-    private GridView gridview;
+    //private GridView gridview;
     private ImageView imageView;
     private CallAndParse callAndParse;
 
     private String subreddit = "nycstreetart";
     private Toolbar toolbar;
     private ImageAdapter imageAdapter;
+    private RecyclerView rv;
 
     View view;
     @Override
@@ -44,6 +48,12 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
         toolbar.setTitle("NYCSTREETART");
         setSupportActionBar(toolbar);
 
+        rv = (RecyclerView)findViewById(R.id.rv);
+        /*LinearLayoutManager llm = new LinearLayoutManager(mContext);
+        rv.setLayoutManager(llm);*/
+        rv.setLayoutManager(new GridLayoutManager(this, 2));
+
+
         mContext = getApplicationContext();
 
         view = this.getWindow().getDecorView();
@@ -53,7 +63,8 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
         callAndParse = new CallAndParse(subreddit);
         callAndParse.delegate = this;
 
-        gridview = (GridView) findViewById(R.id.gridview);
+
+        //gridview = (GridView) findViewById(R.id.gridview);
 
 
         findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
@@ -136,9 +147,11 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
             imageAdapter = null;
             Log.i("MyMainActivity", "imgurContainers " + imgurContainers.getImgurData().get(0).getLink());
             imageAdapter = new ImageAdapter(mContext, imgurContainers);
-            gridview.setAdapter(imageAdapter);
+            //gridview.setAdapter(imageAdapter);
 
 
+            RVAdapter rvAdapter = new RVAdapter(imgurContainers, mContext);
+            rv.setAdapter(rvAdapter);
         }
 
     }
