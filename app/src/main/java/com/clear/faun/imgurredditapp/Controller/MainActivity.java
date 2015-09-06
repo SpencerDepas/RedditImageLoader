@@ -67,9 +67,13 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
         imageView = (ImageView) findViewById(R.id.backdrop);
         mContext = getApplicationContext();
 
+        Log.i("MyMainActivity", "subreddit " + subreddit);
 
         collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        collapsingToolbar.setTitle("NYCSTREETART");
+
+        collapsingToolbar.setTitle("/R/" + "NYCSTREETART");
+
+
 
         //collapsingToolbar.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
 
@@ -79,9 +83,9 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
         ab.setDisplayHomeAsUpEnabled(true);
 
 
-        final View coordinatorLayoutView = findViewById(R.id.main_content);
+        view = findViewById(R.id.main_content);
 
-        view = this.getWindow().getDecorView();
+        //view = this.getWindow().getDecorView();
 
 
         rv = (RecyclerView)findViewById(R.id.rv);
@@ -177,7 +181,7 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
                 imageAdapter = null;
                 Log.i("MyMainActivity", "imgurContainers " + imgurContainers.getImgurData().get(0).getLink());
 
-                collapsingToolbar.setTitle(imgurContainers.getSubRedditName());
+                collapsingToolbar.setTitle("/R/" + imgurContainers.getSubRedditName());
                 collapsingToolbar.setExpandedTitleTextAppearance(R.style.ExpandedAppBar);
                 collapsingToolbar.setCollapsedTitleTextAppearance(R.style.CollapsedAppBar);
                 //toolbar.setTitle(imgurContainers.getSubRedditName());
@@ -211,7 +215,7 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
             if (item.getItemId() == android.R.id.home) {
                 Log.d("MyMainActivity", "item.getItemId() == android.R.id.home");
 
-                Snackbar.make(view, "Not Yet!", Snackbar.LENGTH_LONG).show();
+                Snackbar.make(view, "Ah ah ah, you didn't say the magic word", Snackbar.LENGTH_LONG).show();
                 return true;
             } else {
                 Log.d("MyMainActivity", "Logout");
