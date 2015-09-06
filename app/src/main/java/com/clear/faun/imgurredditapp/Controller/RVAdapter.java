@@ -75,14 +75,14 @@ public class RVAdapter  extends RecyclerView.Adapter<RVAdapter.ImgurViewHolder>{
 
     public static class ImgurViewHolder extends RecyclerView.ViewHolder {
 
-        CardView cv;
+        //CardView cv;
         TextView personName;
         ImageView personPhoto;
 
         ImgurViewHolder(View itemView) {
             super(itemView);
             Log.i("MyRVAdapter", "ImgurViewHolder" );
-            cv = (CardView)itemView.findViewById(R.id.cv);
+            //cv = (CardView)itemView.findViewById(R.id.cv);
             personName = (TextView)itemView.findViewById(R.id.person_name);
             personPhoto = (ImageView)itemView.findViewById(R.id.person_photo);
         }

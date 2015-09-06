@@ -3,7 +3,9 @@ package com.clear.faun.imgurredditapp.Controller;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -37,16 +39,25 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
     private ImageAdapter imageAdapter;
     private RecyclerView rv;
 
+
     View view;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.test);
         Log.i("MyMainActivity", "onCreate   ");
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("NYCSTREETART");
         setSupportActionBar(toolbar);
+
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        CollapsingToolbarLayout collapsingToolbar =
+                (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        collapsingToolbar.setTitle("NYCSTREETART");
+        //collapsingToolbar.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
+
 
         rv = (RecyclerView)findViewById(R.id.rv);
         /*LinearLayoutManager llm = new LinearLayoutManager(mContext);
@@ -63,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
         callAndParse = new CallAndParse(subreddit);
         callAndParse.delegate = this;
 
-
+        imageView = (ImageView) findViewById(R.id.backdrop);
         //gridview = (GridView) findViewById(R.id.gridview);
 
 
@@ -146,6 +157,15 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
             imgurContainers.setSubRedditName(subreddit);
             imageAdapter = null;
             Log.i("MyMainActivity", "imgurContainers " + imgurContainers.getImgurData().get(0).getLink());
+
+
+
+            Glide.with(mContext)
+            .load(imgurContainers.getImgurData().get(0).getLink())
+            .centerCrop()
+            .crossFade()
+            .into(imageView);
+
             imageAdapter = new ImageAdapter(mContext, imgurContainers);
             //gridview.setAdapter(imageAdapter);
 
