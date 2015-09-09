@@ -7,4 +7,6 @@ import java.util.ArrayList;
  */
 public interface ImgurResponse {
     void processFinish(ImgurContainer imgurContainers);
+
+    void processFailed();
 }

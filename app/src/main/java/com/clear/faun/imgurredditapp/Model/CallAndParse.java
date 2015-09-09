@@ -55,9 +55,12 @@ public class CallAndParse {
 
                 Log.i("MyCallAndParse", "dC " + imgurContainers.getImgurData().size());
 
-                /*for(int i = 0; i < imgurContainers.getImgurData().size(); i ++){
-                    Log.i("MyCallAndParse", "dC " + imgurContainers.getImgurData().get(i).getLink());
-                }*/
+                for(int i = 0; i < imgurContainers.getImgurData().size(); i ++){
+                    //Log.i("MyCallAndParse", "dC " + imgurContainers.getImgurData().get(i).getTitle());
+                    if(imgurContainers.getImgurData().get(i).isAnimated()){
+                        imgurContainers.getImgurData().remove(i);
+                    }
+                }
 
                 delegate.processFinish(imgurContainers);
 
@@ -65,7 +68,8 @@ public class CallAndParse {
 
             @Override
             public void failure(RetrofitError error) {
-                Log.i("ParseImgurLink", "error  " + error);
+                Log.i("MyCallAndParse", "error  " + error.toString());
+                delegate.processFailed();
             }
 
 

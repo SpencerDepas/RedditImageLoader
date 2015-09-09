@@ -9,6 +9,29 @@ public class ImgurData {
 
     private String link;
     private String id;
+    private boolean animated;
+    private String title;
+
+
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+
+    public boolean isAnimated() {
+        return animated;
+    }
+
+    public void setAnimated(boolean animated) {
+        this.animated = animated;
+    }
+
+
 
     public String getId(){
         return id;

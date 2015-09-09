@@ -2,7 +2,7 @@ package com.clear.faun.imgurredditapp.Controller;
 
 import android.content.Context;
 import android.graphics.Point;
-import android.support.v7.widget.CardView;
+
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Display;
@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.clear.faun.imgurredditapp.Model.ImgurContainer;
 import com.clear.faun.imgurredditapp.R;
 
@@ -55,6 +56,7 @@ public class RVAdapter  extends RecyclerView.Adapter<RVAdapter.ImgurViewHolder>{
 
         Log.i("MyRVAdapter", "onBindViewHolder");
         //holder.personName.setText(imgurContainers.getImgurData().get(position).getId());
+        Log.i("MyRVAdapter", "position " + position);
         Glide.with(mContext)
                 .load(imgurContainers.getImgurData().get(position).getLink())
                 .override(width, height)
@@ -76,7 +78,7 @@ public class RVAdapter  extends RecyclerView.Adapter<RVAdapter.ImgurViewHolder>{
 
     public static class ImgurViewHolder extends RecyclerView.ViewHolder {
 
-        CardView cv;
+
         TextView personName;
         ImageView personPhoto;
 
