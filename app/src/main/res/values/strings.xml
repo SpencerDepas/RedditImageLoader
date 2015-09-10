@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">ImgurRedditApp</string>
 
+
+    <string name="enter_subreddit_name">Enter Subreddit</string>
+    <string name="subreddit_hint">SUBREDDIT</string>
+
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 </resources>

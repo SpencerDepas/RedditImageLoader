@@ -11,10 +11,10 @@
         android:id="@+id/change_sub"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#9E9E9E"
-        android:text="Enter your favorite subreddit"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:text="@string/enter_subreddit_name"
         android:layout_marginBottom="50dp"
-
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
 
@@ -29,18 +29,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/tvv"
-                android:text="/r/"
+                android:text="/R/"
                 android:textColor="#9E9E9E"
                 />
 
             <EditText
                 android:id="@+id/editTextDialogUserInput"
                 android:layout_toRightOf="@+id/tvv"
-                android:hint="subreddit"
+                android:hint="@string/subreddit_hint"
                 android:textColor="#9E9E9E"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -112,55 +112,52 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
     }
 
     @OnClick(R.id.fab) void fabOnClick() {
-
+        Log.i("MyMainActivity", "fabOnClick: " );
         //DIALOG
+
 
         LayoutInflater li = LayoutInflater.from(MainActivity.this);
         View alertDialogView = li.inflate(R.layout.change_subreddit, null);
 
-        AlertDialog.Builder alertDialogBuilder =
-                new AlertDialog.Builder(MainActivity.this);
-
-        // set prompts.xml to alertdialog builder
-        alertDialogBuilder.setView(alertDialogView);
 
         final EditText subredditEditText = (EditText) alertDialogView
                 .findViewById(R.id.editTextDialogUserInput);
 
-        // set dialog message
-        alertDialogBuilder
-                .setCancelable(false)
-                .setPositiveButton("CONFIRM",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                // get user input and set it to result
-                                // edit text
+
+        AlertDialog.Builder alertDialogBuilder =
+                new AlertDialog.Builder(MainActivity.this, R.style.MyAlertDialogStyle);
+        alertDialogBuilder.setView(alertDialogView);
+        alertDialogBuilder.setPositiveButton("OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // get user input and set it to result
+                        // edit text
 
 
-                                loadingSwitch();
+                        loadingSwitch();
 
-                                subreddit = subredditEditText.getText().toString()
-                                        .toUpperCase()
-                                        .replaceAll(" ", "");
+                        subreddit = subredditEditText.getText().toString()
+                                .toUpperCase()
+                                .replaceAll(" ", "");
 
-                                apiCall(subreddit);
+                        apiCall(subreddit);
 
-                                Log.i("MyMainActivity", "imgurContainers " + subredditEditText.getText().toString());
+                        Log.i("MyMainActivity", "imgurContainers " + subredditEditText.getText().toString());
 
 
-                            }
-                        })
-                .setNegativeButton("CANCEL",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
+                    }
+                });
+        alertDialogBuilder.setNegativeButton("Cancel", null);
+        alertDialogBuilder.show();
 
-        // create alert dialog
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        // show it
-        alertDialog.show();
+
+        // set prompts.xml to alertdialog builder
+        //alertDialogBuilder.setView(alertDialogView);
+
+
+
+
+
     }
 
 

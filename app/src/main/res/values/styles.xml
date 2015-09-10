@@ -6,7 +6,7 @@
 
 
     <style name="Base.Theme.DesignDemo" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">#FFFFFF</item>
+        <item name="colorPrimary">#9E9E9E</item>
         <item name="colorPrimaryDark">#616161</item>
         <item name="colorAccent">#9E9E9E</item>
         <item name="android:textColorPrimary">#FFFFFF</item>
@@ -14,14 +14,23 @@
     </style>
 
     <style name="MyAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="colorPrimary">#9E9E9E</item>
-        <item name="colorPrimaryDark">#616161</item>
-        <item name="colorAccent">#00BCD4</item>
+        <item name="android:windowTitleStyle">@style/MyTitleTextStyle</item>
+        <!-- Used for the buttons -->
+        <item name="colorAccent">#9E9E9E</item>
+        <!-- Used for the title and text -->
         <item name="android:textColorPrimary">#FFFFFF</item>
-        <item name="android:windowBackground">@color/window_background</item>
-        <item name="android:textColorAlertDialogListItem">#00BCD4</item>
-        <item name="textColorAlertDialogListItem">#00BCD4</item>
+        <!-- Used for the background -->
+        <item name="android:background">#FFFFFF</item>
     </style>
+
+    <style name="MyTitleTextStyle">
+        <item name="android:textColor">#FFEB3B</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Title</item>
+    </style>
+
+
+
+
 
 
 
