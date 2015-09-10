@@ -2,44 +2,28 @@ package com.clear.faun.imgurredditapp.Controller;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.opengl.Visibility;
-import android.os.Handler;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.graphics.Palette;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.ImageView;
 
-import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ProgressBar;
 
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.clear.faun.imgurredditapp.Model.CallAndParse;
 import com.clear.faun.imgurredditapp.Model.ImgurContainer;
 import com.clear.faun.imgurredditapp.Model.ImgurResponse;
@@ -66,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
     @Bind(R.id.progressBar) ProgressBar progressBar;
     @Bind(R.id.rv)  RecyclerView rv;
     @Bind(R.id.fab) FloatingActionButton fab;
-
+    //@Bind(R.id.change_sub)  View alertDialogView;
 
 
     @Override
@@ -74,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        Log.i("MyMainActivity", "onCreate   ");
+        Log.i("MyMainActivity", "onCreate");
 
 
         mContext = getApplicationContext();
@@ -106,8 +90,7 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
 
         rv.setLayoutManager(new GridLayoutManager(this, 2));
 
-        callAndParse = new CallAndParse(subreddit);
-        callAndParse.delegate = MainActivity.this;
+        apiCall(subreddit);
 
 
 
@@ -115,16 +98,18 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
 
     @OnClick(R.id.fab) void fabOnClick() {
 
-        LayoutInflater li = LayoutInflater.from(MainActivity.this);
-        View promptsView = li.inflate(R.layout.change_sub, null);
+        //DIALOG
 
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                MainActivity.this);
+        LayoutInflater li = LayoutInflater.from(MainActivity.this);
+        View alertDialogView = li.inflate(R.layout.change_subreddit, null);
+
+        AlertDialog.Builder alertDialogBuilder =
+                new AlertDialog.Builder(MainActivity.this);
 
         // set prompts.xml to alertdialog builder
-        alertDialogBuilder.setView(promptsView);
+        alertDialogBuilder.setView(alertDialogView);
 
-        final EditText subredditEditText = (EditText) promptsView
+        final EditText subredditEditText = (EditText) alertDialogView
                 .findViewById(R.id.editTextDialogUserInput);
 
         // set dialog message
@@ -136,15 +121,14 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
                                 // get user input and set it to result
                                 // edit text
 
-                                progressBar.setVisibility(View.VISIBLE);
-                                rv.setVisibility(View.GONE);
+
+                                loadingSwitch();
 
                                 subreddit = subredditEditText.getText().toString()
                                         .toUpperCase()
                                         .replaceAll(" ", "");
 
-                                callAndParse = new CallAndParse(subreddit);
-                                callAndParse.delegate = MainActivity.this;
+                                apiCall(subreddit);
 
                                 Log.i("MyMainActivity", "imgurContainers " + subredditEditText.getText().toString());
 
@@ -160,9 +144,27 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
 
         // create alert dialog
         AlertDialog alertDialog = alertDialogBuilder.create();
-
         // show it
         alertDialog.show();
+    }
+
+
+    private void apiCall(String subreddit){
+        callAndParse = new CallAndParse(subreddit);
+        callAndParse.delegate = MainActivity.this;
+    }
+
+    private void loadingSwitch(){
+
+        if(rv.getVisibility()== View.VISIBLE){
+            Log.i("MyMainActivity", "rv.getVisibility()== View.VISIBLE " );
+            progressBar.setVisibility(View.VISIBLE);
+            rv.setVisibility(View.GONE);
+        }else{
+            progressBar.setVisibility(View.INVISIBLE);
+            rv.setVisibility(View.VISIBLE);
+        }
+
     }
 
 
@@ -171,6 +173,7 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
         Log.i("MyMainActivity", "processFinish");
         Log.i("MyMainActivity", "imgurContainers size" + imgurContainers.getImgurData().size());
 
+        //allways want to be true
         rv.setVisibility(View.VISIBLE);
 
         if (imgurContainers.getImgurData().size() == 0) {
@@ -197,16 +200,18 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
                     .centerCrop()
                     .crossFade()
                     .into(bannerImageView);
+
             //dont want it to load in grid view
             imgurContainers.getImgurData().remove(0);
 
 
             RVAdapter rvAdapter = new RVAdapter(imgurContainers, mContext);
             rv.setAdapter(rvAdapter);
+
             progressBar.setVisibility(view.INVISIBLE);
 
         }
-        Log.i("MyMainActivity", "imgurContainers size" + imgurContainers.getImgurData().size());
+
     }
 
 
