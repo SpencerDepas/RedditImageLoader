@@ -55,9 +55,9 @@ public class RVAdapter  extends RecyclerView.Adapter<RVAdapter.ImgurViewHolder>{
         Log.i("MyRVAdapter", "onBindViewHolder");
         Log.i("MyRVAdapter", "position " + position);
 
-        if(imgurContainers.getImgurData().get(position).getTitle().length() > 25){
+        if(imgurContainers.getImgurData().get(position).getTitle().length() > 30){
             holder.imageTittle.setText(imgurContainers.getImgurData().get(position).getTitle()
-                    .substring(0, 25));
+                    .substring(0, 25) + "...");
         }else{
             holder.imageTittle.setText(imgurContainers.getImgurData().get(position).getTitle());
         }
