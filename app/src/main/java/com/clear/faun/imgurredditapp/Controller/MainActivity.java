@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
     private Context mContext;
     private CallAndParse callAndParse;
     private ActionBar ab;
-    private String subreddit = "nycstreetart";
+    private String subreddit = "NYCSTREETART";
 
 
 
@@ -75,11 +75,16 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
         ab.setHomeAsUpIndicator(R.drawable.ic_menu);
         ab.setDisplayHomeAsUpEnabled(true);
 
-        Glide.with(mContext)
-                .load(R.drawable.defualt_banner_image)
-                .centerCrop()
-                .crossFade()
-                .into(bannerImageView);
+        if(savedInstanceState == null){
+
+            Glide.with(mContext)
+                    .load(R.drawable.defualt_banner_image)
+                    .centerCrop()
+                    .crossFade()
+                    .into(bannerImageView);
+
+        }
+
 
 
 
@@ -93,6 +98,17 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
 
 
 
+    }
+
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        Log.i("MyMainActivity", "onResume");
+
+        Log.i("MyMainActivity", "subreddit: " + subreddit);
+        setToolBarTitle(subreddit);
+        apiCall(subreddit);
     }
 
     @OnClick(R.id.fab) void fabOnClick() {
@@ -214,15 +230,7 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
 
     }
 
-    @Override
-    public void onResume(){
-        super.onResume();
-        Log.i("MyMainActivity", "onResume");
 
-        Log.i("MyMainActivity", "subreddit: " + subreddit);
-        setToolBarTitle(subreddit);
-        apiCall(subreddit);
-    }
 
 
     public void setToolBarTitle(String subreddit) {
