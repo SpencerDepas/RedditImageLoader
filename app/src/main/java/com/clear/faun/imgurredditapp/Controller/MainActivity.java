@@ -40,8 +40,8 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
     private Context mContext;
     private CallAndParse callAndParse;
     private ActionBar ab;
-    private String subreddit = "nyc";
-    private CollapsingToolbarLayout collapsingToolbar;
+    private String subreddit = "nycstreetart";
+
 
 
     @Bind(R.id.main_content)  View view;
@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
     @Bind(R.id.progressBar) ProgressBar progressBar;
     @Bind(R.id.rv)  RecyclerView rv;
     @Bind(R.id.fab) FloatingActionButton fab;
+    @Bind(R.id.collapsing_toolbar) CollapsingToolbarLayout collapsingToolbar;
     //@Bind(R.id.change_sub)  View alertDialogView;
 
 
@@ -63,11 +64,10 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
 
         mContext = getApplicationContext();
 
-        subreddit = "nycstreetart";
+      
 
         setSupportActionBar(toolbar);
 
-        collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         collapsingToolbar.setTitle("/R/" + subreddit);
 
 
@@ -82,7 +82,6 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
                 .into(bannerImageView);
 
 
-        Log.i("MyMainActivity", "subreddit " + subreddit);
 
 
         view.setBackgroundColor(Color.WHITE);
@@ -90,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
 
         rv.setLayoutManager(new GridLayoutManager(this, 2));
 
-        apiCall(subreddit);
+
 
 
 
@@ -178,6 +177,7 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
 
         if (imgurContainers.getImgurData().size() == 0) {
 
+            // nothing returned
             Snackbar.make(view, "Try a diferent subreddit", Snackbar.LENGTH_LONG).show();
 
 
@@ -190,7 +190,7 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
             Log.i("MyMainActivity", "imgurContainers subreddit" + subreddit);
 
 
-            setToolBarTitle(imgurContainers.getSubRedditName());
+            setToolBarTitle(subreddit);
 
             //toolbar.setTitle(imgurContainers.getSubRedditName());
 
@@ -214,20 +214,30 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
 
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        Log.i("MyMainActivity", "onResume");
 
-    public void setToolBarTitle(String subredit) {
+        Log.i("MyMainActivity", "subreddit: " + subreddit);
+        setToolBarTitle(subreddit);
+        apiCall(subreddit);
+    }
+
+
+    public void setToolBarTitle(String subreddit) {
         Log.i("MyMainActivity", "imgurContainers SETTING TITLE NOW");
         /*if(collapsingToolbar.getTitle().toString()){
             Log.i("MyMainActivity", "collapsingToolbar.getTitle().toString(): "
                     + collapsingToolbar.getTitle().toString());
         }*/
 
-        collapsingToolbar.setTitle("/R/" + subredit);
+        collapsingToolbar.setTitle("/R/" + subreddit);
         collapsingToolbar.setExpandedTitleTextAppearance(R.style.ExpandedAppBar);
         collapsingToolbar.setExpandedTitleTextAppearance(R.style.ExpandedAppBarPlus1);
 
-        toolbar.setTitle("/R/" + subredit);
-        ab.setTitle("/R/" + subredit);
+        toolbar.setTitle("/R/" + subreddit);
+        ab.setTitle("/R/" + subreddit);
 
       /*  collapsingToolbar.setCollapsedTitleTextAppearance(R.style.CollapsedAppBarPlus1);
         collapsingToolbar.setCollapsedTitleTextAppearance(R.style.CollapsedAppBar);
@@ -245,6 +255,22 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
         Log.i("MyMainActivity", "processFailed");
         Snackbar.make(view, "Try a diferent subreddit", Snackbar.LENGTH_LONG).show();
         rv.setVisibility(View.VISIBLE);
+    }
+
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+
+        outState.putString("SUBREDDIT", subreddit);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        subreddit = savedInstanceState.getString("SUBREDDIT");
     }
 
 
