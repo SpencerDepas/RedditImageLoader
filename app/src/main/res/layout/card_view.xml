@@ -9,20 +9,20 @@
 
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="2dp"
-        android:paddingRight="2dp"
-        android:paddingBottom="1dp"
-        android:paddingTop="1dp"
-        android:background="#FFFFFF"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="2dp"
+    android:paddingRight="2dp"
+    android:paddingBottom="1dp"
+    android:paddingTop="1dp"
+    android:background="#FFFFFF"
 
-        >
+    >
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/person_photo"
+            android:id="@+id/image_view"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             />

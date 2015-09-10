@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.clear.faun.imgurredditapp.Model.ImgurContainer;
 import com.clear.faun.imgurredditapp.R;
 
@@ -45,7 +44,7 @@ public class RVAdapter  extends RecyclerView.Adapter<RVAdapter.ImgurViewHolder>{
     @Override
     public ImgurViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Log.i("MyRVAdapter", "onCreateViewHolder" );
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_test, parent, false);
         ImgurViewHolder imVW = new ImgurViewHolder(v);
         return imVW;
 
@@ -53,16 +52,22 @@ public class RVAdapter  extends RecyclerView.Adapter<RVAdapter.ImgurViewHolder>{
 
     @Override
     public void onBindViewHolder(ImgurViewHolder holder, int position) {
-
         Log.i("MyRVAdapter", "onBindViewHolder");
-        //holder.personName.setText(imgurContainers.getImgurData().get(position).getId());
         Log.i("MyRVAdapter", "position " + position);
+
+        if(imgurContainers.getImgurData().get(position).getTitle().length() > 25){
+            holder.imageTittle.setText(imgurContainers.getImgurData().get(position).getTitle()
+                    .substring(0, 25));
+        }else{
+            holder.imageTittle.setText(imgurContainers.getImgurData().get(position).getTitle());
+        }
+
         Glide.with(mContext)
                 .load(imgurContainers.getImgurData().get(position).getLink())
                 .override(width, height)
                 .centerCrop()
                 .crossFade()
-                .into(holder.personPhoto);
+                .into(holder.imageView);
 
     }
 
@@ -79,15 +84,15 @@ public class RVAdapter  extends RecyclerView.Adapter<RVAdapter.ImgurViewHolder>{
     public static class ImgurViewHolder extends RecyclerView.ViewHolder {
 
 
-        TextView personName;
-        ImageView personPhoto;
+        TextView imageTittle;
+        ImageView imageView;
 
         ImgurViewHolder(View itemView) {
             super(itemView);
             Log.i("MyRVAdapter", "ImgurViewHolder" );
             //cv = (CardView)itemView.findViewById(R.id.cv);
-            //personName = (TextView)itemView.findViewById(R.id.person_name);
-            personPhoto = (ImageView)itemView.findViewById(R.id.person_photo);
+            imageTittle = (TextView)itemView.findViewById(R.id.image_tittle);
+            imageView = (ImageView)itemView.findViewById(R.id.image_view);
         }
     }
 
