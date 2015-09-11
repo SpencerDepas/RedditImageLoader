@@ -32,6 +32,8 @@ import com.clear.faun.imgurredditapp.R;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends AppCompatActivity implements ImgurResponse {
 
@@ -57,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         Log.i("MyMainActivity", "onCreate");
