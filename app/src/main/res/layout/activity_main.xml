@@ -69,7 +69,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-        android:src="@drawable/ic_grade_white_36dp"
+        android:src="@drawable/ic_grade_white_48dp"
         android:layout_margin="@dimen/fab_margin"
         />
 
