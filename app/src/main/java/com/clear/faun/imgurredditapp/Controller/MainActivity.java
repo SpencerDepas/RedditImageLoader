@@ -41,7 +41,6 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
 
     private Context mContext;
     private CallAndParse callAndParse;
-    private ActionBar ab;
     private String subreddit = "NYCSTREETART";
 
 
@@ -67,16 +66,18 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
 
         mContext = getApplicationContext();
 
-      
+        collapsingToolbar.setTitleEnabled(false);
+
 
         setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        collapsingToolbar.setTitle("/R/" + subreddit);
+        //collapsingToolbar.setTitle("/R/" + subreddit);
 
 
-        ab = getSupportActionBar();
-        ab.setHomeAsUpIndicator(R.drawable.ic_menu);
-        ab.setDisplayHomeAsUpEnabled(true);
+
+
 
         if(savedInstanceState == null){
 
@@ -104,13 +105,16 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
     }
 
 
+
+
+
     @Override
     public void onResume(){
         super.onResume();
         Log.i("MyMainActivity", "onResume");
 
         Log.i("MyMainActivity", "subreddit: " + subreddit);
-        setToolBarTitle(subreddit);
+        //setToolBarTitle(subreddit);
         apiCall(subreddit);
     }
 
@@ -157,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
         // set prompts.xml to alertdialog builder
         //alertDialogBuilder.setView(alertDialogView);
 
-
+        //setToolBarTitle(subreddit);
 
 
 
@@ -206,9 +210,10 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
             Log.i("MyMainActivity", "imgurContainers subreddit" + subreddit);
 
 
-            setToolBarTitle(subreddit);
 
-            //toolbar.setTitle(imgurContainers.getSubRedditName());
+            //setToolBarTitle(subreddit);
+
+            toolbar.setTitle(imgurContainers.getSubRedditName());
 
 
             Glide.with(mContext)
@@ -226,11 +231,11 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
 
             progressBar.setVisibility(view.INVISIBLE);
 
+            //setToolBarTitle(subreddit);
+
         }
 
     }
-
-
 
 
     public void setToolBarTitle(String subreddit) {
@@ -240,16 +245,21 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
                     + collapsingToolbar.getTitle().toString());
         }*/
 
+        //toolbar.setTitle("/R/" + subreddit);
+        //getSupportActionBar().setTitle("/R/" + subreddit);
         collapsingToolbar.setTitle("/R/" + subreddit);
-        collapsingToolbar.setExpandedTitleTextAppearance(R.style.ExpandedAppBar);
-        collapsingToolbar.setExpandedTitleTextAppearance(R.style.ExpandedAppBarPlus1);
+//        collapsingToolbar.setTitleEnabled(true);
+//
+//
+//        collapsingToolbar.setExpandedTitleTextAppearance(R.style.ExpandedAppBar);
+//        collapsingToolbar.setExpandedTitleTextAppearance(R.style.ExpandedAppBarPlus1);
+//        //collapsingToolbar.setExpanded(true, true); // works
+//
+//
+//        collapsingToolbar.setCollapsedTitleTextAppearance(R.style.CollapsedAppBarPlus1);
+//        collapsingToolbar.setCollapsedTitleTextAppearance(R.style.CollapsedAppBar);
 
-        toolbar.setTitle("/R/" + subreddit);
-        ab.setTitle("/R/" + subreddit);
 
-      /*  collapsingToolbar.setCollapsedTitleTextAppearance(R.style.CollapsedAppBarPlus1);
-        collapsingToolbar.setCollapsedTitleTextAppearance(R.style.CollapsedAppBar);
-        collapsingToolbar.setCollapsedTitleTextAppearance(R.style.CollapsedAppBarPlus1);*/
 
         Log.i("MyMainActivity", "collapsingToolbar.getTitle().toString(): "
                 + collapsingToolbar.getTitle().toString());
