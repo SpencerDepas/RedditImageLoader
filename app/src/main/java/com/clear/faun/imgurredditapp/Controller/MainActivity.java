@@ -6,7 +6,10 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -44,9 +47,10 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
     private Context mContext;
     private CallAndParse callAndParse;
     private String subreddit = "NYCSTREETART";
+    private SharedPreferences pref;
 
 
-
+    @Bind(R.id.drawer_layout)  DrawerLayout mDrawerLayout;
     @Bind(R.id.main_content)  View view;
     @Bind(R.id.backdrop)  ImageView bannerImageView;
     @Bind(R.id.toolbar)  Toolbar toolbar;
@@ -55,19 +59,20 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
     @Bind(R.id.fab) FloatingActionButton fab;
     @Bind(R.id.collapsing_toolbar) CollapsingToolbarLayout collapsingToolbar;
     //@Bind(R.id.change_sub)  View alertDialogView;
-    private SharedPreferences pref;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.test);
         ButterKnife.bind(this);
         Log.i("MyMainActivity", "onCreate");
 
 
         mContext = getApplicationContext();
 
+        //this is the temp fix that allows the tittle to be changed
         collapsingToolbar.setTitleEnabled(false);
 
 
@@ -108,9 +113,25 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
 
     }
 
+    private void setupDrawerContent(NavigationView navigationView) {
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        menuItem.setChecked(true);
+                        mDrawerLayout.closeDrawers();
+                        return true;
+                    }
+                });
+    }
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+
+
+
         //getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
@@ -123,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
         Log.i("MyMainActivity", "onResume");
 
         Log.i("MyMainActivity", "subreddit: " + subreddit);
-        //setToolBarTitle(subreddit);
+
         apiCall(subreddit);
     }
 
@@ -166,13 +187,19 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
                         // edit text
 
 
-                        loadingSwitch();
+
 
                         subreddit = subredditEditText.getText().toString()
                                 .toUpperCase()
                                 .replaceAll(" ", "");
 
-                        apiCall(subreddit);
+                        if(subreddit.length() > 1){
+                            loadingSwitch();
+                            apiCall(subreddit);
+                        }else{
+                            Snackbar.make(view, "Please try again", Snackbar.LENGTH_LONG).show();
+                        }
+
 
                         Log.i("MyMainActivity", "imgurContainers " + subredditEditText.getText().toString());
 
@@ -182,11 +209,6 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
         alertDialogBuilder.setNegativeButton("Cancel", null);
         alertDialogBuilder.show();
 
-
-        // set prompts.xml to alertdialog builder
-        //alertDialogBuilder.setView(alertDialogView);
-
-        //setToolBarTitle(subreddit);
 
 
 
@@ -235,9 +257,6 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
             Log.i("MyMainActivity", "imgurContainers subreddit" + subreddit);
 
 
-
-            //setToolBarTitle(subreddit);
-
             toolbar.setTitle(imgurContainers.getSubRedditName());
 
 
@@ -256,7 +275,6 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
 
             progressBar.setVisibility(view.INVISIBLE);
 
-            //setToolBarTitle(subreddit);
 
         }
 
@@ -324,8 +342,8 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
         if (item.getItemId() == android.R.id.home) {
             Log.d("MyMainActivity", "item.getItemId() == android.R.id.home");
 
-
-            Snackbar.make(view, "Ah ah ah, you didn't say the magic word", Snackbar.LENGTH_LONG).show();
+            mDrawerLayout.openDrawer(GravityCompat.START);
+            //Snackbar.make(view, "Ah ah ah, you didn't say the magic word", Snackbar.LENGTH_LONG).show();
             return true;
         } else {
             Log.d("MyMainActivity", "Logout");
@@ -334,7 +352,6 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
         }
 
 
-        //return super.onOptionsItemSelected(item);
     }
 
 

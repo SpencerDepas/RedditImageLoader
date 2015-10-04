@@ -2,34 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
 
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/register_to_vote"
-            android:icon="@drawable/ic_dashboard"
-            android:title="dvsdvsdvsdv" />
-        <item
-            android:id="@+id/nav_messages"
-            android:icon="@drawable/ic_event"
-            android:title="sdvsdvsdvsdv" />
-        <item
-            android:id="@+id/nav_friends"
-            android:icon="@drawable/ic_headset"
-            android:title="sdvsdvsdvsdv"/>
-        <item
-            android:id="@+id/nav_discussion"
-            android:icon="@drawable/ic_forum"
-            android:title="sdvsdvsdsdvsdv" />
-    </group>
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/rv"
+        />
 
-
-    <item android:title="Sub items">
-        <menu>
-            <item
-                android:id="@+id/my_zip_code_item"
-                android:icon="@drawable/ic_forum"
-                android:title="fvfvfv" />
-        </menu>
-    </item>
 
 
 </menu>
