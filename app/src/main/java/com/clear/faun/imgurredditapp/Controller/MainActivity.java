@@ -2,6 +2,7 @@ package com.clear.faun.imgurredditapp.Controller;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -15,6 +16,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -53,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
     @Bind(R.id.fab) FloatingActionButton fab;
     @Bind(R.id.collapsing_toolbar) CollapsingToolbarLayout collapsingToolbar;
     //@Bind(R.id.change_sub)  View alertDialogView;
-
+    private SharedPreferences pref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,9 +75,11 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        //collapsingToolbar.setTitle("/R/" + subreddit);
+        pref = getApplicationContext().getSharedPreferences("MyPref", 0);
 
-
+        if(pref.getString("saved_subreddit", null) != null){
+            subreddit = pref.getString("saved_subreddit", null);
+        }
 
 
 
@@ -104,7 +108,12 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
 
     }
 
-
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        //getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
 
 
 
@@ -117,6 +126,22 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse {
         //setToolBarTitle(subreddit);
         apiCall(subreddit);
     }
+
+
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        Log.i("MyMainActivity", "onPause");
+
+
+
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString("saved_subreddit", subreddit);
+        editor.apply();
+
+    }
+
 
     @OnClick(R.id.fab) void fabOnClick() {
         Log.i("MyMainActivity", "fabOnClick: " );
