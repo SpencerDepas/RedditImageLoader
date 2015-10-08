@@ -28,7 +28,12 @@ public class RVAdapter  extends RecyclerView.Adapter<RVAdapter.ImgurViewHolder>{
     private ImgurContainer imgurContainers;
     private int itemLayout;
 
-    RVAdapter(ImgurContainer imgurContainers, Context mContext) {
+    RVAdapter(){
+
+    }
+
+
+    public void setInfo(ImgurContainer imgurContainers, Context mContext) {
         Log.i("MyRVAdapter", "RVAdapter " );
         this.imgurContainers = imgurContainers;
         this.mContext = mContext;
@@ -44,7 +49,7 @@ public class RVAdapter  extends RecyclerView.Adapter<RVAdapter.ImgurViewHolder>{
     @Override
     public ImgurViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Log.i("MyRVAdapter", "onCreateViewHolder" );
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_test, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.image_grid_view_layout, parent, false);
         ImgurViewHolder imVW = new ImgurViewHolder(v);
         return imVW;
 

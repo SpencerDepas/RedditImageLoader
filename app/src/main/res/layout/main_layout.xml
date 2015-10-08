@@ -17,7 +17,7 @@
 
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/drawer_layout"
-    android:theme="@style/Theme.DesignDemo"
+    android:theme="@style/Theme.NavWindow"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     android:fitsSystemWindows="true">
@@ -25,6 +25,7 @@
     <include layout="@layout/activity_main"/>
 
     <fragment android:id="@+id/navigation_fragment"
+        android:theme="@style/Theme.NavWindow"
         android:layout_marginTop="?attr/actionBarSize"
         android:layout_width="@dimen/navigation_drawer_width"
         android:layout_height="match_parent"

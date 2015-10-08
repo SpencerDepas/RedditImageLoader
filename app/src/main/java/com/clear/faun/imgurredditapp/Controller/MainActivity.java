@@ -18,7 +18,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -32,7 +31,6 @@ import com.clear.faun.imgurredditapp.Model.CallAndParse;
 import com.clear.faun.imgurredditapp.Model.ImgurContainer;
 import com.clear.faun.imgurredditapp.Model.ImgurResponse;
 import com.clear.faun.imgurredditapp.Model.RealmDatabase;
-import com.clear.faun.imgurredditapp.Model.SearchedSubredditList;
 import com.clear.faun.imgurredditapp.R;
 
 import butterknife.Bind;
@@ -44,8 +42,6 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 
 import io.fabric.sdk.android.Fabric;
-import io.realm.Realm;
-import io.realm.RealmResults;
 
 public class MainActivity extends AppCompatActivity implements ImgurResponse,
         NavigationViewFragment.NavigationDrawerCallbacks{
@@ -58,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
     private SharedPreferences pref;
     private Gson gson;
     private RealmDatabase database;
+    private  RVAdapter rvAdapter;
 
     private NavigationViewFragment mNavigationDrawerFragment;
     //@Bind(R.id.nav_header_tittle) TextView navViewTextView;
@@ -78,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
-        setContentView(R.layout.test);
+        setContentView(R.layout.main_layout);
         ButterKnife.bind(this);
         Log.i("MyMainActivity", "onCreate");
 
@@ -118,15 +115,7 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
 
         Log.i("MyMainActivity", "searchedSubreddits : size " + searchedSubreddits.size());
 
-        if(savedInstanceState == null){
 
-            Glide.with(mContext)
-                    .load(R.drawable.defualt_banner_image)
-                    .centerCrop()
-                    .crossFade()
-                    .into(bannerImageView);
-
-        }
 
 
 
@@ -140,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
         //saves and loads data
         database = new RealmDatabase(mContext);
 
-
+        rvAdapter = new RVAdapter();
     }
 
 
@@ -175,8 +164,7 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
         editor.apply();
 
 
-        //saveData();
-        database.saveData(searchedSubreddits);
+
 
 
 
@@ -189,7 +177,7 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
 
 
         LayoutInflater li = LayoutInflater.from(MainActivity.this);
-        View alertDialogView = li.inflate(R.layout.change_subreddit, null);
+        View alertDialogView = li.inflate(R.layout.change_subreddit_dialog, null);
 
 
         final EditText subredditEditText = (EditText) alertDialogView
@@ -248,6 +236,8 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
 
 
 
+
+
     @Override
     public void processFinish(ImgurContainer imgurContainers) {
         Log.i("MyMainActivity", "processFinish");
@@ -266,17 +256,11 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
 
             //this will be saved to realm onpause
 
-            if(searchedSubreddits.size() > 0){
-                Log.i("MyMainActivity", "searchedSubreddits.size() > 0" );
-                if(!searchedSubreddits.get(searchedSubreddits.size() - 1).equals(curruntSubreddit)){
-                    Log.i("MyMainActivity", "!searchedSubreddits.get(searchedSubreddits.size() - 1).equals(curruntSubreddit)" );
-                    searchedSubreddits.add(curruntSubreddit);
-                }
 
-            }else{
-                Log.i("MyMainActivity", "else " + curruntSubreddit);
-                searchedSubreddits.add(curruntSubreddit);
-            }
+            //Log.i("MyMainActivity", "else " + curruntSubreddit);
+
+
+
 
 
 
@@ -304,10 +288,19 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
             imgurContainers.getImgurData().remove(0);
 
 
-            RVAdapter rvAdapter = new RVAdapter(imgurContainers, mContext);
+            rvAdapter.setInfo(imgurContainers, mContext);
             rv.setAdapter(rvAdapter);
 
+            addSubreddittoSavedList();
+
+
             progressBar.setVisibility(view.INVISIBLE);
+            database.saveData(searchedSubreddits);
+            String[] stockArr = new String[searchedSubreddits.size()];
+            stockArr = searchedSubreddits.toArray(stockArr);
+            mNavigationDrawerFragment.updateDraw(stockArr);
+
+
 
 
         }
@@ -315,7 +308,30 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
     }
 
 
+    private void addSubreddittoSavedList(){
+        Log.i("MyMainActivity", "addSubreddittoSavedList " );
+        if(searchedSubreddits.size() > 0){
+            for(int i = 0 ; i < searchedSubreddits.size(); i ++){
+                Log.i("MyMainActivity", "i " + i);
+                Log.i("MyMainActivity", "else " + curruntSubreddit);
+                if(searchedSubreddits.get(i).equals(curruntSubreddit)){
+                    //if it is found then we break
+                    break;
 
+                }else{
+                    if(i == searchedSubreddits.size() - 1){
+                        searchedSubreddits.add(curruntSubreddit);
+                        Log.i("MyMainActivity", "added curruntSubreddit " + curruntSubreddit);
+                        break;
+                    }
+                }
+            }
+        }else{
+            searchedSubreddits.add(curruntSubreddit);
+            Log.i("MyMainActivity", "added curruntSubreddit " + curruntSubreddit);
+        }
+
+    }
 
     @Override
     public void processFailed() {
@@ -369,6 +385,7 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
         Log.d("MyMainActivity", "position: " + position);
 //        Snackbar.make(view, "position: " + searchedSubreddits.get(position),
 //                Snackbar.LENGTH_SHORT).show();
+        mDrawerLayout.closeDrawers();
         apiCall(searchedSubreddits.get(position));
         curruntSubreddit = searchedSubreddits.get(position);
     }

@@ -2,6 +2,7 @@
 
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:theme="@style/Theme.DesignDemo"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
     android:background="?attr/colorPrimaryDark"
@@ -14,6 +15,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="/R/NYCSTREETART"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+        />
 
 </LinearLayout>

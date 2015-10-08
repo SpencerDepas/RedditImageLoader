@@ -28,9 +28,9 @@ public class NavigationViewFragment extends Fragment{
 
 
 
-    //test
-    static String daysWeek[] = { "Yesterday", "Today", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"
-            , "Today", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"
+    //main_layout
+    static String launcherSubList[] = { "NYCSTREETART", "BROOKLYN", "ANDROID", "FOOD", "EARTHPORN", "BACON", "GAMEING"
+            , "RAMEN", "SPICY"
     };
     /**
      * Remember the position of the selected item.
@@ -76,7 +76,7 @@ public class NavigationViewFragment extends Fragment{
     @Override
     public void onActivityCreated (Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Log.i("MyNavigationViewFra", "onCreate");
+        Log.i("MyNavigationViewFra", "onActivityCreated");
         // Indicate that this fragment would like to influence the set of actions in the action bar.
         setHasOptionsMenu(true);
     }
@@ -84,7 +84,7 @@ public class NavigationViewFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.i("MyNavigationViewFra", "onCreate");
+        Log.i("MyNavigationViewFra", "onCreateView");
         mDrawerListView = (ListView) inflater.inflate(
                 R.layout.fragment_navigation_drawer, container, false);
         mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -98,14 +98,16 @@ public class NavigationViewFragment extends Fragment{
                 getActivity(),
                 android.R.layout.simple_list_item_activated_1,
                 android.R.id.text1,
-                daysWeek
+                launcherSubList
 
         ));
+
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
         return mDrawerListView;
     }
 
     public void updateDraw(String[] array){
+
         mDrawerListView.setAdapter(new ArrayAdapter<String>(
                 getActivity(),
                 android.R.layout.simple_list_item_activated_1,
@@ -116,7 +118,7 @@ public class NavigationViewFragment extends Fragment{
     }
 
     public boolean isDrawerOpen() {
-        Log.i("MyNavigationViewFra", "onCreate");
+        Log.i("MyNavigationViewFra", "isDrawerOpen");
         return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mFragmentContainerView);
     }
 
@@ -127,7 +129,7 @@ public class NavigationViewFragment extends Fragment{
      * @param drawerLayout The DrawerLayout containing this fragment's UI.
      */
     public void setUp(int fragmentId, DrawerLayout drawerLayout) {
-        Log.i("MyNavigationViewFra", "onCreate");
+        Log.i("MyNavigationViewFra", "setUp");
         mFragmentContainerView = getActivity().findViewById(fragmentId);
         mDrawerLayout = drawerLayout;
 
