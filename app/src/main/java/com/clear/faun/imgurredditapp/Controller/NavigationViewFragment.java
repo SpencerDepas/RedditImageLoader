@@ -105,6 +105,16 @@ public class NavigationViewFragment extends Fragment{
         return mDrawerListView;
     }
 
+    public void updateDraw(String[] array){
+        mDrawerListView.setAdapter(new ArrayAdapter<String>(
+                getActivity(),
+                android.R.layout.simple_list_item_activated_1,
+                android.R.id.text1,
+                array
+
+        ));
+    }
+
     public boolean isDrawerOpen() {
         Log.i("MyNavigationViewFra", "onCreate");
         return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mFragmentContainerView);

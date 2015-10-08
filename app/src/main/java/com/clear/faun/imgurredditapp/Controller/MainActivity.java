@@ -31,6 +31,7 @@ import com.bumptech.glide.Glide;
 import com.clear.faun.imgurredditapp.Model.CallAndParse;
 import com.clear.faun.imgurredditapp.Model.ImgurContainer;
 import com.clear.faun.imgurredditapp.Model.ImgurResponse;
+import com.clear.faun.imgurredditapp.Model.RealmDatabase;
 import com.clear.faun.imgurredditapp.Model.SearchedSubredditList;
 import com.clear.faun.imgurredditapp.R;
 
@@ -56,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
     private String curruntSubreddit = "NYCSTREETART";
     private SharedPreferences pref;
     private Gson gson;
-
+    private RealmDatabase database;
 
     private NavigationViewFragment mNavigationDrawerFragment;
     //@Bind(R.id.nav_header_tittle) TextView navViewTextView;
@@ -136,85 +137,11 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
 
         rv.setLayoutManager(new GridLayoutManager(this, 2));
 
-
-
-
-
-    }
-    Realm realm;
-    RealmResults <SearchedSubredditList> query;
-    public void loadData() {
-        Log.i("MyMainActivity", "loadDatadata");
-        realm = Realm.getInstance(this);
-
-
-        query = realm.where(SearchedSubredditList.class)
-                .findAll();
-
-        //json body convert to array
-        try{
-
-
-
-
-
-           //String[] subreddits = gson.fromJson(query.get(query.size() - 1).getSearchedSubreddit(), String[].class);
-           // Log.i("MyMainActivity", "query.get(0).getSearchedSubreddit() " + query.get(0).getSearchedSubreddit());
-           //  Log.i("MyMainActivity", "loadDatadata subreddits: length " + subreddits.length);
-
-            searchedSubreddits.clear();
-            Log.i("MyMainActivity", "searchedSubreddits size"  + searchedSubreddits.size());
-
-            for(int i = 0 ; i < query.size(); i ++){
-                searchedSubreddits.add(query.get(i).getSearchedSubreddit());
-                Log.i("MyMainActivity", "loadDatadata searchedSubreddits.get(i); " + searchedSubreddits.get(i));
-            }
-
-
-            Log.i("MyMainActivity", "loadDatadata searchedSubredditsz: " + searchedSubreddits.size());
-        }catch (Exception e){
-            Log.i("MyMainActivity", "loadDatadata Exception: e " + e.toString());
-        }
-
-
+        //saves and loads data
+        database = new RealmDatabase(mContext);
 
 
     }
-
-    public void saveData() {
-        Log.i("MyMainActivity", "saveDatadata");
-
-        Realm realm = Realm.getInstance(getApplicationContext());
-        realm.beginTransaction();
-
-        realm.where(SearchedSubredditList.class)
-                .findAll().clear();
-        realm.commitTransaction();
-
-
-        for(int i = 0; i < searchedSubreddits.size(); i ++){
-            Log.i("MyMainActivity", "saveDatadata searchedSubreddits : " + searchedSubreddits.get(i));
-
-
-            realm.beginTransaction();
-
-            SearchedSubredditList searchedSubredditList = realm.createObject(SearchedSubredditList.class);
-            searchedSubredditList.setSearchedSubreddit(searchedSubreddits.get(i));
-
-            realm.commitTransaction();
-
-
-
-        }
-
-        //searchedSubreddits.clear();
-
-
-
-    }
-
-
-
 
 
 
@@ -226,10 +153,11 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
 
         Log.i("MyMainActivity", "curruntSubreddit: " + curruntSubreddit);
 
-        loadData();
 
-
-
+        database.loadData(searchedSubreddits);
+        String[] stockArr = new String[searchedSubreddits.size()];
+        stockArr = searchedSubreddits.toArray(stockArr);
+        mNavigationDrawerFragment.updateDraw(stockArr);
 
         apiCall(curruntSubreddit);
     }
@@ -247,13 +175,8 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
         editor.apply();
 
 
-        saveData();
-
-
-
-
-
-
+        //saveData();
+        database.saveData(searchedSubreddits);
 
 
 
@@ -303,9 +226,6 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
         alertDialogBuilder.setNegativeButton("Cancel", null);
         alertDialogBuilder.show();
 
-
-
-
     }
 
 
@@ -315,7 +235,6 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
     }
 
     private void loadingSwitch(){
-
         if(rv.getVisibility()== View.VISIBLE){
             Log.i("MyMainActivity", "rv.getVisibility()== View.VISIBLE " );
             progressBar.setVisibility(View.VISIBLE);
@@ -448,7 +367,9 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         Log.d("MyMainActivity", "position: " + position);
-        Snackbar.make(view, "position: " + NavigationViewFragment.daysWeek[position],
-                Snackbar.LENGTH_SHORT).show();
+//        Snackbar.make(view, "position: " + searchedSubreddits.get(position),
+//                Snackbar.LENGTH_SHORT).show();
+        apiCall(searchedSubreddits.get(position));
+        curruntSubreddit = searchedSubreddits.get(position);
     }
 }
