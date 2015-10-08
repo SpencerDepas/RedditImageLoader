@@ -39,6 +39,9 @@ android {
 
         }
     }
+    packagingOptions {
+        pickFirst 'META-INF/services/javax.annotation.processing.Processor'
+    }
 }
 
 dependencies {
@@ -58,6 +61,9 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.6.1'
 
     compile 'com.jakewharton:butterknife:7.0.1'
+
+    compile 'io.realm:realm-android:0.82.2'
+
     compile('com.crashlytics.sdk.android:crashlytics:2.5.2@aar') {
         transitive = true;
     }
