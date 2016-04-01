@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".Controller.DetailView"
+    tools:showIn="@layout/activity_detail_view_two">
+
+
+
+
+    <android.support.v7.widget.CardView
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        card_view:cardElevation="4dp"
+
+        android:layout_margin="8dp"
+        android:background="@color/BlueGray"
+        android:id="@+id/detail_card_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        >
+
+
+        <TextView
+            android:layout_margin="5dp"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:text="PENIS"
+            android:id="@+id/detail_text"
+            android:transitionName="transition1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+
+    </android.support.v7.widget.CardView>
+
+    <ImageView
+        android:elevation="4dp"
+        android:id="@+id/detail_image"
+        android:layout_gravity="center"
+        android:transitionName="profile1"
+        android:padding="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <ImageView
+        android:src="@drawable/defualt_banner_image"
+        android:elevation="4dp"
+        android:id="@+id/detail_image_full"
+        android:layout_gravity="center"
+        android:padding="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

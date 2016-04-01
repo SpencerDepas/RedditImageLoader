@@ -42,6 +42,8 @@
             <EditText
                 android:id="@+id/editTextDialogUserInput"
                 android:layout_toRightOf="@+id/tvv"
+                android:imeOptions="actionSearch"
+         
                 android:hint="@string/subreddit_hint"
                 android:textColor="#9E9E9E"
                 android:layout_width="wrap_content"

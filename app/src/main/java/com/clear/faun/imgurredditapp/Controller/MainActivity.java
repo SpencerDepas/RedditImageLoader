@@ -1,13 +1,23 @@
 package com.clear.faun.imgurredditapp.Controller;
 
+import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.Build;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.util.Pair;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.KeyEventCompat;
 import android.support.v4.widget.DrawerLayout;
 
 import android.support.v7.app.AlertDialog;
@@ -16,18 +26,23 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.transition.Transition;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 
 import android.view.MenuItem;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 
 import com.bumptech.glide.Glide;
-import com.clear.faun.imgurredditapp.Model.CallAndParse;
+import com.clear.faun.imgurredditapp.Model.CallAndParseRetrofitTwo;
 import com.clear.faun.imgurredditapp.Model.ImgurContainer;
 import com.clear.faun.imgurredditapp.Model.ImgurResponse;
 import com.clear.faun.imgurredditapp.Model.RealmDatabase;
@@ -46,10 +61,13 @@ import io.fabric.sdk.android.Fabric;
 public class MainActivity extends AppCompatActivity implements ImgurResponse,
         NavigationViewFragment.NavigationDrawerCallbacks{
 
-
+    private String loadSubreddit;
+    private final String IMGUR_OVER_CAPACITY = "retrofit.RetrofitError: 500 Unknown Error";
+    private final String RETROFIT_NO_CONNECTION = "retrofit.RetrofitError: failed to connect to api.imgur.com/199.27.76.193 (port 443) after 15000ms: isConnected failed: ENETUNREACH (Network is unreachable)";
+    private final String RETROFIT_NO_HOST = "retrofit.RetrofitError: Unable to resolve host \"api.imgur.com\": No address associated with hostname";
     private ArrayList<String> searchedSubreddits = new ArrayList<>();
     private Context mContext;
-    private CallAndParse callAndParse;
+    private CallAndParseRetrofitTwo callAndParse;
     private String curruntSubreddit = "NYCSTREETART";
     private SharedPreferences pref;
     private Gson gson;
@@ -69,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
     @Bind(R.id.collapsing_toolbar) CollapsingToolbarLayout collapsingToolbar;
     //@Bind(R.id.change_sub)  View alertDialogView;
 
-
+    private ImgurContainer imgurContainers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,11 +97,12 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
         ButterKnife.bind(this);
         Log.i("MyMainActivity", "onCreate");
 
+        imgurContainers = null;
 
         mContext = getApplicationContext();
 
         //this is the temp fix that allows the tittle to be changed
-        collapsingToolbar.setTitleEnabled(false);
+        collapsingToolbar.setTitleEnabled(true);
 
 
         setSupportActionBar(toolbar);
@@ -117,8 +136,10 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
 
 
 
-
-
+        //change nav bar colour
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setNavigationBarColor(ContextCompat.getColor(mContext, R.color.colorPrimaryDark));
+        }
 
 
         view.setBackgroundColor(Color.WHITE);
@@ -130,7 +151,13 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
         database = new RealmDatabase(mContext);
 
         rvAdapter = new RVAdapter();
+
+
+
+
+
     }
+
 
 
 
@@ -143,13 +170,28 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
         Log.i("MyMainActivity", "curruntSubreddit: " + curruntSubreddit);
 
 
+        if(database == null){
+            Log.i("MyMainActivity", "database == null "  );
+            database = new RealmDatabase(mContext);
+        }
         database.loadData(searchedSubreddits);
         String[] stockArr = new String[searchedSubreddits.size()];
         stockArr = searchedSubreddits.toArray(stockArr);
         mNavigationDrawerFragment.updateDraw(stockArr);
 
-        apiCall(curruntSubreddit);
+
+        if( imgurContainers != null){
+
+        }else{
+            apiCall(curruntSubreddit);
+        }
+
+
+
+
     }
+
+
 
 
 
@@ -172,7 +214,7 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
 
 
     @OnClick(R.id.fab) void fabOnClick() {
-        Log.i("MyMainActivity", "fabOnClick: " );
+        Log.i("MyMainActivity", "fabOnClick: ");
         //DIALOG
 
 
@@ -184,42 +226,75 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
                 .findViewById(R.id.editTextDialogUserInput);
 
 
-        AlertDialog.Builder alertDialogBuilder =
+
+        final AlertDialog.Builder alertDialogBuilder =
                 new AlertDialog.Builder(MainActivity.this, R.style.MyAlertDialogStyle);
         alertDialogBuilder.setView(alertDialogView);
-        alertDialogBuilder.setPositiveButton("OK",
+
+
+        alertDialogBuilder.setPositiveButton("SEARCH",
                 new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
                         // get user input and set it to result
                         // edit text
 
-
-                        curruntSubreddit = subredditEditText.getText().toString()
+                        searchForSubredditDialog(subredditEditText.getText().toString()
                                 .toUpperCase()
-                                .replaceAll(" ", "");
-
-                        if (curruntSubreddit.length() > 1) {
-                            loadingSwitch();
-                            apiCall(curruntSubreddit);
-                        } else {
-                            Snackbar.make(view, "Please try again", Snackbar.LENGTH_LONG).show();
-                        }
-
-
-                        Log.i("MyMainActivity", "imgurContainers " + subredditEditText.getText().toString());
-
-
+                                .replaceAll(" ", ""));
                     }
+
                 });
         alertDialogBuilder.setNegativeButton("Cancel", null);
-        alertDialogBuilder.show();
+        final AlertDialog alert = alertDialogBuilder.create();
+        alert.show();
+
+        subredditEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    Log.i("MyMainActivity", "onEditorAction");
+
+                    alert.dismiss();
+                    searchForSubredditDialog(subredditEditText.getText().toString()
+                            .toUpperCase()
+                            .replaceAll(" ", ""));
+
+
+                    return true;
+                }
+                return false;
+            }
+
+
+        });
+
+    }
+
+    private void searchForSubredditDialog(String subreddit){
+
+
+
+        if (subreddit.length() > 1) {
+            loadingSwitch();
+            apiCall(subreddit);
+        } else {
+            Snackbar.make(view, "Please try again", Snackbar.LENGTH_LONG).show();
+        }
+
+
 
     }
 
 
     private void apiCall(String subreddit){
-        callAndParse = new CallAndParse(subreddit);
+//        callAndParse = new CallAndParse(subreddit);
+//
+
+
+        CallAndParseRetrofitTwo callAndParse = new CallAndParseRetrofitTwo(subreddit);
         callAndParse.delegate = MainActivity.this;
+
     }
 
     private void loadingSwitch(){
@@ -242,7 +317,8 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
     public void processFinish(ImgurContainer imgurContainers) {
         Log.i("MyMainActivity", "processFinish");
         Log.i("MyMainActivity", "imgurContainers size" + imgurContainers.getImgurData().size());
-
+        Log.i("MyMainActivity", "link 1" + imgurContainers.getImgurData().get(1).getLink());
+        this.imgurContainers = imgurContainers;
         //allways want to be true
         rv.setVisibility(View.VISIBLE);
 
@@ -261,8 +337,8 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
 
 
 
-
-
+            //currunt subreddit is only updated is load subreddit is returned with sucsess
+            curruntSubreddit = imgurContainers.getSubRedditName();
 
 
 
@@ -274,8 +350,8 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
             //imageAdapter = null;
 
 
-
-            toolbar.setTitle("/R/" + imgurContainers.getSubRedditName());
+            collapsingToolbar.setTitle("/R/" + curruntSubreddit);
+            toolbar.setTitle("/R/" + curruntSubreddit);
 
 
             Glide.with(mContext)
@@ -288,7 +364,8 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
             imgurContainers.getImgurData().remove(0);
 
 
-            rvAdapter.setInfo(imgurContainers, mContext);
+            MainActivity mApp = this;
+            rvAdapter.setInfo(imgurContainers, mContext, mApp);
             rv.setAdapter(rvAdapter);
 
             addSubreddittoSavedList();
@@ -305,7 +382,12 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
 
         }
 
+
+
+
+
     }
+
 
 
     private void addSubreddittoSavedList(){
@@ -334,10 +416,22 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
     }
 
     @Override
-    public void processFailed() {
+    public void processFailed(String error) {
         Log.i("MyMainActivity", "processFailed");
-        Snackbar.make(view, "Try a diferent curruntSubreddit", Snackbar.LENGTH_LONG).show();
+        Log.i("MyMainActivity", "error : " + error);
+
+
+
+        if(error.equals(IMGUR_OVER_CAPACITY)){
+            Snackbar.make(view, "R/Image is temporarily over capacity. Please try again", Snackbar.LENGTH_LONG).show();
+        }else if(error.equals(RETROFIT_NO_CONNECTION) || error.equals(RETROFIT_NO_HOST)){
+            Snackbar.make(view, "Not connected to the interweb", Snackbar.LENGTH_LONG).show();
+        }else{
+            Snackbar.make(view, "Please try a diferent curruntSubreddit", Snackbar.LENGTH_LONG).show();
+        }
+
         rv.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
 

@@ -11,4 +11,5 @@
     <string name="world">Hello world and twooooo</string>
 
     <string name="action_settings">Settings</string>
+    <string name="title_activity_detail_view_two">DetailViewTwo</string>
 </resources>
