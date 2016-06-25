@@ -1,4 +1,4 @@
-package com.clear.faun.imgurredditapp.database;
+package com.clear.faun.imgurredditapp.Model;
 
 import io.realm.RealmObject;
 

@@ -1,14 +1,17 @@
-package com.clear.faun.imgurredditapp.ui.activity;
+package com.clear.faun.imgurredditapp.Controller;
 
 import android.content.Context;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Display;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -21,7 +24,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class DetailViewActivity extends AppCompatActivity {
+public class DetailView extends AppCompatActivity {
 
     @Bind(R.id.detail_image) ImageView detailImageView;
     @Bind(R.id.detail_text) TextView textView;
@@ -32,8 +35,8 @@ public class DetailViewActivity extends AppCompatActivity {
 
 
     private Context mContext;
-    public static String IMAGE_URL_KEY = "transition_key";
-    public static String IMAGE_TITTLE_KEY = "transition_key_ONE";
+    static String IMAGE_URL_KEY = "transition_key";
+    static String IMAGE_TITTLE_KEY = "transition_key_ONE";
 
     private int width = 0;
     private int height = 0;

@@ -1,7 +1,12 @@
-package com.clear.faun.imgurredditapp.client;
+package com.clear.faun.imgurredditapp.Model;
+
+import android.content.Context;
+import android.util.Log;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 
-import com.clear.faun.imgurredditapp.interfaces.ImgurResponse;
 
 /**
  * Created by spencer on 9/2/2015.

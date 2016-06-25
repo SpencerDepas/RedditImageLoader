@@ -1,10 +1,7 @@
-package com.clear.faun.imgurredditapp.client;
+package com.clear.faun.imgurredditapp.Model;
 
 import android.util.Log;
 
-import com.clear.faun.imgurredditapp.model.ImgurContainer;
-import com.clear.faun.imgurredditapp.interfaces.ImgurResponse;
-import com.clear.faun.imgurredditapp.interfaces.MyApiEndpointInterface;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
