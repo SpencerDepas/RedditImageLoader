@@ -1,4 +1,4 @@
-package com.clear.faun.imgurredditapp.Model;
+package com.clear.faun.imgurredditapp.model;
 
 import com.google.gson.annotations.SerializedName;
 

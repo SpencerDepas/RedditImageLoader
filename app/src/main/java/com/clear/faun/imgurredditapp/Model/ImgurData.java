@@ -1,4 +1,4 @@
-package com.clear.faun.imgurredditapp.Model;
+package com.clear.faun.imgurredditapp.model;
 
 /**
  * Created by spencer on 9/2/2015.

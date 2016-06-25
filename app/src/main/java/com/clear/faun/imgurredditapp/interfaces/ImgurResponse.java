@@ -1,6 +1,6 @@
-package com.clear.faun.imgurredditapp.Model;
+package com.clear.faun.imgurredditapp.interfaces;
 
-import java.util.ArrayList;
+import com.clear.faun.imgurredditapp.model.ImgurContainer;
 
 /**
  * Created by spencer on 9/2/2015.

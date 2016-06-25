@@ -1,23 +1,15 @@
-package com.clear.faun.imgurredditapp.Controller;
+package com.clear.faun.imgurredditapp.ui.activity;
 
-import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Build;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.util.Pair;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.KeyEventCompat;
 import android.support.v4.widget.DrawerLayout;
 
 import android.support.v7.app.AlertDialog;
@@ -26,12 +18,10 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.transition.Transition;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -42,10 +32,12 @@ import android.widget.TextView;
 
 
 import com.bumptech.glide.Glide;
-import com.clear.faun.imgurredditapp.Model.CallAndParseRetrofitTwo;
-import com.clear.faun.imgurredditapp.Model.ImgurContainer;
-import com.clear.faun.imgurredditapp.Model.ImgurResponse;
-import com.clear.faun.imgurredditapp.Model.RealmDatabase;
+import com.clear.faun.imgurredditapp.adapter.RVAdapter;
+import com.clear.faun.imgurredditapp.client.CallAndParseRetrofitTwo;
+import com.clear.faun.imgurredditapp.ui.fragment.NavigationViewFragment;
+import com.clear.faun.imgurredditapp.model.ImgurContainer;
+import com.clear.faun.imgurredditapp.interfaces.ImgurResponse;
+import com.clear.faun.imgurredditapp.database.RealmDatabase;
 import com.clear.faun.imgurredditapp.R;
 
 import butterknife.Bind;
@@ -59,7 +51,7 @@ import java.util.ArrayList;
 import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends AppCompatActivity implements ImgurResponse,
-        NavigationViewFragment.NavigationDrawerCallbacks{
+        NavigationViewFragment.NavigationDrawerCallbacks {
 
     private String loadSubreddit;
     private final String IMGUR_OVER_CAPACITY = "retrofit.RetrofitError: 500 Unknown Error";
@@ -72,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
     private SharedPreferences pref;
     private Gson gson;
     private RealmDatabase database;
-    private  RVAdapter rvAdapter;
+    private RVAdapter rvAdapter;
 
     private NavigationViewFragment mNavigationDrawerFragment;
     //@Bind(R.id.nav_header_tittle) TextView navViewTextView;

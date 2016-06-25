@@ -1,4 +1,4 @@
-package com.clear.faun.imgurredditapp.Controller;
+package com.clear.faun.imgurredditapp.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -19,7 +19,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.clear.faun.imgurredditapp.Model.ImgurContainer;
+import com.clear.faun.imgurredditapp.ui.activity.DetailViewActivity;
+import com.clear.faun.imgurredditapp.ui.activity.MainActivity;
+import com.clear.faun.imgurredditapp.model.ImgurContainer;
 import com.clear.faun.imgurredditapp.R;
 
 /**
@@ -35,7 +37,7 @@ public class RVAdapter  extends RecyclerView.Adapter<RVAdapter.ImgurViewHolder> 
     private RecyclerView recyclerView;
 
     //AdapterView.OnItemClickListener mItemClickListener;
-    RVAdapter(){
+    public RVAdapter(){
 
     }
     public static MainActivity mActivity;
@@ -148,9 +150,9 @@ public class RVAdapter  extends RecyclerView.Adapter<RVAdapter.ImgurViewHolder> 
 
                 Pair<View, String> pair1 = Pair.create((View)imageView, "profile1");
                 Pair<View, String> pair2 = Pair.create((View)imageTittle, "transition1");
-                Intent intent = new Intent(mActivity, DetailView.class);
-                intent.putExtra(DetailView.IMAGE_URL_KEY, imgurContainers.getImgurData().get(mPosition).getLink());
-                intent.putExtra(DetailView.IMAGE_TITTLE_KEY, imgurContainers.getImgurData().get(mPosition).getTitle());
+                Intent intent = new Intent(mActivity, DetailViewActivity.class);
+                intent.putExtra(DetailViewActivity.IMAGE_URL_KEY, imgurContainers.getImgurData().get(mPosition).getLink());
+                intent.putExtra(DetailViewActivity.IMAGE_TITTLE_KEY, imgurContainers.getImgurData().get(mPosition).getTitle());
                 ActivityOptionsCompat options = ActivityOptionsCompat.
                         makeSceneTransitionAnimation(mActivity, pair1, pair2);
 //                ActivityOptionsCompat options = ActivityOptionsCompat.
@@ -158,8 +160,8 @@ public class RVAdapter  extends RecyclerView.Adapter<RVAdapter.ImgurViewHolder> 
                 mActivity.startActivity(intent, options.toBundle());
             }else{
 
-                Intent intent = new Intent(mActivity, DetailView.class);
-                intent.putExtra(DetailView.IMAGE_URL_KEY, "http://i.imgur.com/Mb6AMg0.jpg");
+                Intent intent = new Intent(mActivity, DetailViewActivity.class);
+                intent.putExtra(DetailViewActivity.IMAGE_URL_KEY, "http://i.imgur.com/Mb6AMg0.jpg");
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 mActivity.startActivity(intent);
             }
