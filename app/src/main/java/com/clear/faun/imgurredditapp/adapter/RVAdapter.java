@@ -84,14 +84,20 @@ public class RVAdapter  extends RecyclerView.Adapter<RVAdapter.ImgurViewHolder> 
         Log.i("MyRVAdapter", "width : " + width);
         Log.i("MyRVAdapter", "height : " + height);
 
+//        Glide.with(mContext)
+//                .load(imgurContainers.getImgurData().get(position).getLink())
+//                //.override(width, height)
+//                .centerCrop()
+//                //.crossFade()
+//                .fitCenter()
+//                .into(holder.imageView);
+
         Glide.with(mContext)
                 .load(imgurContainers.getImgurData().get(position).getLink())
-                //.override(width, height)
+                .override(width, height)
                 .centerCrop()
-                //.crossFade()
-                .fitCenter()
+                .crossFade()
                 .into(holder.imageView);
-
 
         holder.bind(position);
 
@@ -145,26 +151,26 @@ public class RVAdapter  extends RecyclerView.Adapter<RVAdapter.ImgurViewHolder> 
 
             Log.i("MyRVAdapter", "mPosition " + mPosition);
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                Log.i("MyRVAdapter", "onClick on lolipop");
-
-                Pair<View, String> pair1 = Pair.create((View)imageView, "profile1");
-                Pair<View, String> pair2 = Pair.create((View)imageTittle, "transition1");
-                Intent intent = new Intent(mActivity, DetailViewActivity.class);
-                intent.putExtra(DetailViewActivity.IMAGE_URL_KEY, imgurContainers.getImgurData().get(mPosition).getLink());
-                intent.putExtra(DetailViewActivity.IMAGE_TITTLE_KEY, imgurContainers.getImgurData().get(mPosition).getTitle());
-                ActivityOptionsCompat options = ActivityOptionsCompat.
-                        makeSceneTransitionAnimation(mActivity, pair1, pair2);
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//                Log.i("MyRVAdapter", "onClick on lolipop");
+//
+//                Pair<View, String> pair1 = Pair.create((View)imageView, "profile1");
+//                Pair<View, String> pair2 = Pair.create((View)imageTittle, "transition1");
+//                Intent intent = new Intent(mActivity, DetailViewActivity.class);
+//                intent.putExtra(DetailViewActivity.IMAGE_URL_KEY, imgurContainers.getImgurData().get(mPosition).getLink());
+//                intent.putExtra(DetailViewActivity.IMAGE_TITTLE_KEY, imgurContainers.getImgurData().get(mPosition).getTitle());
 //                ActivityOptionsCompat options = ActivityOptionsCompat.
-//                        .makeSceneTransitionAnimation(mActivity, pair1 , pair2);
-                mActivity.startActivity(intent, options.toBundle());
-            }else{
-
-                Intent intent = new Intent(mActivity, DetailViewActivity.class);
-                intent.putExtra(DetailViewActivity.IMAGE_URL_KEY, "http://i.imgur.com/Mb6AMg0.jpg");
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                mActivity.startActivity(intent);
-            }
+//                        makeSceneTransitionAnimation(mActivity, pair1, pair2);
+////                ActivityOptionsCompat options = ActivityOptionsCompat.
+////                        .makeSceneTransitionAnimation(mActivity, pair1 , pair2);
+//                mActivity.startActivity(intent, options.toBundle());
+//            }else{
+//
+//                Intent intent = new Intent(mActivity, DetailViewActivity.class);
+//                intent.putExtra(DetailViewActivity.IMAGE_URL_KEY, "http://i.imgur.com/Mb6AMg0.jpg");
+//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                mActivity.startActivity(intent);
+//            }
 
 
         }
