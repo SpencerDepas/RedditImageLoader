@@ -77,7 +77,6 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
     @Bind(R.id.rv)  RecyclerView rv;
     @Bind(R.id.fab) FloatingActionButton fab;
     @Bind(R.id.collapsing_toolbar) CollapsingToolbarLayout collapsingToolbar;
-    //@Bind(R.id.change_sub)  View alertDialogView;
 
     private ImgurContainer imgurContainers;
 
