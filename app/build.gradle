@@ -23,11 +23,11 @@ repositories {
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    buildToolsVersion "23.0.3"
 
     defaultConfig {
         applicationId "com.clear.faun.imgurredditapp"
-        minSdkVersion 14
+        minSdkVersion 15
         targetSdkVersion 23
         versionCode 3
         versionName "1.003"
@@ -55,8 +55,9 @@ dependencies {
 
 
     compile 'com.google.code.gson:gson:2.6.1'
-
     compile 'com.squareup.okhttp3:okhttp:3.1.2'
+
+    compile 'com.jakewharton.timber:timber:4.1.2'
 
 
     compile 'com.squareup.retrofit:retrofit:1.9.+'

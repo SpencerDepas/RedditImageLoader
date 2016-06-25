@@ -33,10 +33,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.clear.faun.imgurredditapp.adapter.RVAdapter;
-import com.clear.faun.imgurredditapp.client.CallAndParseRetrofitTwo;
 import com.clear.faun.imgurredditapp.client.ServiceFactory;
 import com.clear.faun.imgurredditapp.interfaces.ImgurAPI;
-import com.clear.faun.imgurredditapp.model.ImgurData;
+import com.clear.faun.imgurredditapp.model.REST_ERRORS;
 import com.clear.faun.imgurredditapp.ui.fragment.NavigationViewFragment;
 import com.clear.faun.imgurredditapp.model.ImgurContainer;
 import com.clear.faun.imgurredditapp.interfaces.ImgurResponse;
@@ -48,7 +47,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import com.crashlytics.android.Crashlytics;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
@@ -56,45 +54,40 @@ import io.fabric.sdk.android.Fabric;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity implements ImgurResponse,
         NavigationViewFragment.NavigationDrawerCallbacks {
 
-    private String loadSubreddit;
-    private final String IMGUR_OVER_CAPACITY = "retrofit.RetrofitError: 500 Unknown Error";
-    private final String RETROFIT_NO_CONNECTION = "retrofit.RetrofitError: failed to connect to api.imgur.com/199.27.76.193 (port 443) after 15000ms: isConnected failed: ENETUNREACH (Network is unreachable)";
-    private final String RETROFIT_NO_HOST = "retrofit.RetrofitError: Unable to resolve host \"api.imgur.com\": No address associated with hostname";
-    private ArrayList<String> searchedSubreddits = new ArrayList<>();
-    private Context mContext;
-    private CallAndParseRetrofitTwo callAndParse;
-    private String curruntSubreddit = "NYCSTREETART";
-    private SharedPreferences pref;
-    private Gson gson;
-    private RealmDatabase database;
-    private RVAdapter rvAdapter;
 
+    private ArrayList<String> mSearchedSubreddits = new ArrayList<>();
+    private Context mContext;
+    private String mCurrentSubreddit = "NYCSTREETART";
+    private SharedPreferences mPref;
+    private RealmDatabase mDatabase;
+    private RVAdapter mRvAdapter;
+    private ImgurContainer mImgurContainers;
     private NavigationViewFragment mNavigationDrawerFragment;
-    //@Bind(R.id.nav_header_tittle) TextView navViewTextView;
+
+    
     @Bind(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
 
     @Bind(R.id.main_content)
-    View view;
+    View mView;
     @Bind(R.id.backdrop)
-    ImageView bannerImageView;
+    ImageView mBannerImageView;
     @Bind(R.id.toolbar)
-    Toolbar toolbar;
+    Toolbar mToolbar;
     @Bind(R.id.progressBar)
-    ProgressBar progressBar;
+    ProgressBar mProgressBar;
     @Bind(R.id.rv)
-    RecyclerView rv;
+    RecyclerView mRv;
     @Bind(R.id.fab)
-    FloatingActionButton fab;
+    FloatingActionButton mFab;
     @Bind(R.id.collapsing_toolbar)
-    CollapsingToolbarLayout collapsingToolbar;
-    //@Bind(R.id.change_sub)  View alertDialogView;
+    CollapsingToolbarLayout mCollapsingToolbar;
 
-    private ImgurContainer imgurContainers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,17 +95,20 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.main_layout);
         ButterKnife.bind(this);
+        Timber.tag("LifeCycles");
+        Timber.d("Activity Created");
+
         Log.i("MyMainActivity", "onCreate");
 
-        imgurContainers = null;
+        mImgurContainers = null;
 
         mContext = getApplicationContext();
 
         //this is the temp fix that allows the tittle to be changed
-        collapsingToolbar.setTitleEnabled(true);
+        mCollapsingToolbar.setTitleEnabled(true);
 
 
-        setSupportActionBar(toolbar);
+        setSupportActionBar(mToolbar);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -127,16 +123,15 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
 
-        pref = getApplicationContext().getSharedPreferences("MyPref", 0);
+        mPref = getApplicationContext().getSharedPreferences("MyPref", 0);
 
-        if (pref.getString("saved_subreddit", null) != null) {
-            curruntSubreddit = pref.getString("saved_subreddit", null);
+        if (mPref.getString("saved_subreddit", null) != null) {
+            mCurrentSubreddit = mPref.getString("saved_subreddit", null);
         }
 
-        gson = new Gson();
 
 
-        Log.i("MyMainActivity", "searchedSubreddits : size " + searchedSubreddits.size());
+        Log.i("MyMainActivity", "mSearchedSubreddits : size " + mSearchedSubreddits.size());
 
 
         //change nav bar colour
@@ -145,23 +140,22 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
         }
 
 
-        view.setBackgroundColor(Color.WHITE);
+        mView.setBackgroundColor(Color.WHITE);
 
 
-        rv.setLayoutManager(new GridLayoutManager(this, 2));
+        mRv.setLayoutManager(new GridLayoutManager(this, 2));
 
         //saves and loads data
-        database = new RealmDatabase(mContext);
+        mDatabase = new RealmDatabase(mContext);
 
-        rvAdapter = new RVAdapter();
+        mRvAdapter = new RVAdapter();
 
 
     }
 
 
-    private void rxCall() {
+    private void rxCall(String subreddit) {
 
-        String subreddit = "nycstreetart";
 
         ImgurAPI service = ServiceFactory.createRetrofitService(ImgurAPI.class, ImgurAPI.SERVICE_ENDPOINT);
 
@@ -195,23 +189,23 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
         super.onResume();
         Log.i("MyMainActivity", "onResume");
 
-        Log.i("MyMainActivity", "curruntSubreddit: " + curruntSubreddit);
+        Log.i("MyMainActivity", "mCurrentSubreddit: " + mCurrentSubreddit);
 
 
-        if (database == null) {
-            Log.i("MyMainActivity", "database == null ");
-            database = new RealmDatabase(mContext);
+        if (mDatabase == null) {
+            Log.i("MyMainActivity", "mDatabase == null ");
+            mDatabase = new RealmDatabase(mContext);
         }
-        database.loadData(searchedSubreddits);
-        String[] stockArr = new String[searchedSubreddits.size()];
-        stockArr = searchedSubreddits.toArray(stockArr);
+        mDatabase.loadData(mSearchedSubreddits);
+        String[] stockArr = new String[mSearchedSubreddits.size()];
+        stockArr = mSearchedSubreddits.toArray(stockArr);
         mNavigationDrawerFragment.updateDraw(stockArr);
 
 
-        if (imgurContainers != null) {
+        if (mImgurContainers != null) {
 
         } else {
-            apiCall(curruntSubreddit);
+            rxCall(mCurrentSubreddit);
         }
 
 
@@ -224,8 +218,8 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
         Log.i("MyMainActivity", "onPause");
 
 
-        SharedPreferences.Editor editor = pref.edit();
-        editor.putString("saved_subreddit", curruntSubreddit);
+        SharedPreferences.Editor editor = mPref.edit();
+        editor.putString("saved_subreddit", mCurrentSubreddit);
         editor.apply();
 
 
@@ -295,51 +289,40 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
 
         if (subreddit.length() > 1) {
             loadingSwitch();
-            apiCall(subreddit);
+            rxCall(subreddit);
         } else {
-            Snackbar.make(view, "Please try again", Snackbar.LENGTH_LONG).show();
+            Snackbar.make(mView, "Please try again", Snackbar.LENGTH_LONG).show();
         }
 
 
     }
 
 
-    private void apiCall(String subreddit) {
-//        callAndParse = new CallAndParse(subreddit);
-//
-        rxCall();
-
-
-//        CallAndParseRetrofitTwo callAndParse = new CallAndParseRetrofitTwo(subreddit);
-//        callAndParse.delegate = MainActivity.this;
-
-    }
-
     private void loadingSwitch() {
-        if (rv.getVisibility() == View.VISIBLE) {
-            Log.i("MyMainActivity", "rv.getVisibility()== View.VISIBLE ");
-            progressBar.setVisibility(View.VISIBLE);
-            rv.setVisibility(View.GONE);
+        if (mRv.getVisibility() == View.VISIBLE) {
+            Log.i("MyMainActivity", "mRv.getVisibility()== View.VISIBLE ");
+            mProgressBar.setVisibility(View.VISIBLE);
+            mRv.setVisibility(View.GONE);
         } else {
-            progressBar.setVisibility(View.INVISIBLE);
-            rv.setVisibility(View.VISIBLE);
+            mProgressBar.setVisibility(View.INVISIBLE);
+            mRv.setVisibility(View.VISIBLE);
         }
 
     }
 
 
     private void loadedRX(ImgurContainer response) {
-        imgurContainers = response;
+        mImgurContainers = response;
 
-        Log.i("MyMainActivity", "loadedRX" + imgurContainers.getImgurData().get(1).getLink());
-        this.imgurContainers = imgurContainers;
+        Log.i("MyMainActivity", "loadedRX" + mImgurContainers.getImgurData().get(1).getLink());
+        this.mImgurContainers = mImgurContainers;
         //allways want to be true
-        rv.setVisibility(View.VISIBLE);
+        mRv.setVisibility(View.VISIBLE);
 
-        if (imgurContainers.getImgurData().size() == 0) {
+        if (mImgurContainers.getImgurData().size() == 0) {
 
             // nothing returned
-            Snackbar.make(view, "Try a diferent curruntSubreddit", Snackbar.LENGTH_LONG).show();
+            Snackbar.make(mView, "Try a diferent mCurrentSubreddit", Snackbar.LENGTH_LONG).show();
 
 
         } else {
@@ -347,45 +330,45 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
             //this will be saved to realm onpause
 
 
-            //Log.i("MyMainActivity", "else " + curruntSubreddit);
+            //Log.i("MyMainActivity", "else " + mCurrentSubreddit);
 
 
             //currunt subreddit is only updated is load subreddit is returned with sucsess
-            curruntSubreddit = imgurContainers.getSubRedditName();
+            mCurrentSubreddit = mImgurContainers.getSubRedditName();
 
 
-            Log.i("MyMainActivity", "imgurContainers curruntSubreddit " + curruntSubreddit);
+            Log.i("MyMainActivity", "mImgurContainers mCurrentSubreddit " + mCurrentSubreddit);
 
-            Glide.clear(view);
-            imgurContainers.setSubRedditName(curruntSubreddit);
+            Glide.clear(mView);
+            mImgurContainers.setSubRedditName(mCurrentSubreddit);
             //imageAdapter = null;
 
 
-            collapsingToolbar.setTitle("/R/" + curruntSubreddit);
-            toolbar.setTitle("/R/" + curruntSubreddit);
+            mCollapsingToolbar.setTitle("/R/" + mCurrentSubreddit);
+            mToolbar.setTitle("/R/" + mCurrentSubreddit);
 
 
             Glide.with(mContext)
-                    .load(imgurContainers.getImgurData().get(0).getLink())
+                    .load(mImgurContainers.getImgurData().get(0).getLink())
                     .centerCrop()
                     .crossFade()
-                    .into(bannerImageView);
+                    .into(mBannerImageView);
 
-            //dont want it to load in grid view
-            imgurContainers.getImgurData().remove(0);
+            //dont want it to load in grid mView
+            mImgurContainers.getImgurData().remove(0);
 
 
             MainActivity mApp = this;
-            rvAdapter.setInfo(imgurContainers, mContext, mApp);
-            rv.setAdapter(rvAdapter);
+            mRvAdapter.setInfo(mImgurContainers, mContext, mApp);
+            mRv.setAdapter(mRvAdapter);
 
             addSubreddittoSavedList();
 
 
-            progressBar.setVisibility(view.INVISIBLE);
-            database.saveData(searchedSubreddits);
-            String[] stockArr = new String[searchedSubreddits.size()];
-            stockArr = searchedSubreddits.toArray(stockArr);
+            mProgressBar.setVisibility(mView.INVISIBLE);
+            mDatabase.saveData(mSearchedSubreddits);
+            String[] stockArr = new String[mSearchedSubreddits.size()];
+            stockArr = mSearchedSubreddits.toArray(stockArr);
             mNavigationDrawerFragment.updateDraw(stockArr);
 
 
@@ -398,16 +381,16 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
     @Override
     public void processFinish(ImgurContainer imgurContainers) {
         Log.i("MyMainActivity", "processFinish");
-        Log.i("MyMainActivity", "imgurContainers size" + imgurContainers.getImgurData().size());
+        Log.i("MyMainActivity", "mImgurContainers size" + imgurContainers.getImgurData().size());
         Log.i("MyMainActivity", "link 1" + imgurContainers.getImgurData().get(1).getLink());
-        this.imgurContainers = imgurContainers;
+        this.mImgurContainers = imgurContainers;
         //allways want to be true
-        rv.setVisibility(View.VISIBLE);
+        mRv.setVisibility(View.VISIBLE);
 
         if (imgurContainers.getImgurData().size() == 0) {
 
             // nothing returned
-            Snackbar.make(view, "Try a diferent curruntSubreddit", Snackbar.LENGTH_LONG).show();
+            Snackbar.make(mView, "Try a diferent mCurrentSubreddit", Snackbar.LENGTH_LONG).show();
 
 
         } else {
@@ -415,45 +398,45 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
             //this will be saved to realm onpause
 
 
-            //Log.i("MyMainActivity", "else " + curruntSubreddit);
+            //Log.i("MyMainActivity", "else " + mCurrentSubreddit);
 
 
             //currunt subreddit is only updated is load subreddit is returned with sucsess
-            curruntSubreddit = imgurContainers.getSubRedditName();
+            mCurrentSubreddit = imgurContainers.getSubRedditName();
 
 
-            Log.i("MyMainActivity", "imgurContainers curruntSubreddit " + curruntSubreddit);
+            Log.i("MyMainActivity", "mImgurContainers mCurrentSubreddit " + mCurrentSubreddit);
 
-            Glide.clear(view);
-            imgurContainers.setSubRedditName(curruntSubreddit);
+            Glide.clear(mView);
+            imgurContainers.setSubRedditName(mCurrentSubreddit);
             //imageAdapter = null;
 
 
-            collapsingToolbar.setTitle("/R/" + curruntSubreddit);
-            toolbar.setTitle("/R/" + curruntSubreddit);
+            mCollapsingToolbar.setTitle("/R/" + mCurrentSubreddit);
+            mToolbar.setTitle("/R/" + mCurrentSubreddit);
 
 
             Glide.with(mContext)
                     .load(imgurContainers.getImgurData().get(0).getLink())
                     .centerCrop()
                     .crossFade()
-                    .into(bannerImageView);
+                    .into(mBannerImageView);
 
-            //dont want it to load in grid view
+            //dont want it to load in grid mView
             imgurContainers.getImgurData().remove(0);
 
 
             MainActivity mApp = this;
-            rvAdapter.setInfo(imgurContainers, mContext, mApp);
-            rv.setAdapter(rvAdapter);
+            mRvAdapter.setInfo(imgurContainers, mContext, mApp);
+            mRv.setAdapter(mRvAdapter);
 
             addSubreddittoSavedList();
 
 
-            progressBar.setVisibility(view.INVISIBLE);
-            database.saveData(searchedSubreddits);
-            String[] stockArr = new String[searchedSubreddits.size()];
-            stockArr = searchedSubreddits.toArray(stockArr);
+            mProgressBar.setVisibility(mView.INVISIBLE);
+            mDatabase.saveData(mSearchedSubreddits);
+            String[] stockArr = new String[mSearchedSubreddits.size()];
+            stockArr = mSearchedSubreddits.toArray(stockArr);
             mNavigationDrawerFragment.updateDraw(stockArr);
 
 
@@ -465,25 +448,25 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
 
     private void addSubreddittoSavedList() {
         Log.i("MyMainActivity", "addSubreddittoSavedList ");
-        if (searchedSubreddits.size() > 0) {
-            for (int i = 0; i < searchedSubreddits.size(); i++) {
+        if (mSearchedSubreddits.size() > 0) {
+            for (int i = 0; i < mSearchedSubreddits.size(); i++) {
                 Log.i("MyMainActivity", "i " + i);
-                Log.i("MyMainActivity", "else " + curruntSubreddit);
-                if (searchedSubreddits.get(i).equals(curruntSubreddit)) {
+                Log.i("MyMainActivity", "else " + mCurrentSubreddit);
+                if (mSearchedSubreddits.get(i).equals(mCurrentSubreddit)) {
                     //if it is found then we break
                     break;
 
                 } else {
-                    if (i == searchedSubreddits.size() - 1) {
-                        searchedSubreddits.add(curruntSubreddit);
-                        Log.i("MyMainActivity", "added curruntSubreddit " + curruntSubreddit);
+                    if (i == mSearchedSubreddits.size() - 1) {
+                        mSearchedSubreddits.add(mCurrentSubreddit);
+                        Log.i("MyMainActivity", "added mCurrentSubreddit " + mCurrentSubreddit);
                         break;
                     }
                 }
             }
         } else {
-            searchedSubreddits.add(curruntSubreddit);
-            Log.i("MyMainActivity", "added curruntSubreddit " + curruntSubreddit);
+            mSearchedSubreddits.add(mCurrentSubreddit);
+            Log.i("MyMainActivity", "added mCurrentSubreddit " + mCurrentSubreddit);
         }
 
     }
@@ -494,16 +477,17 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
         Log.i("MyMainActivity", "error : " + error);
 
 
-        if (error.equals(IMGUR_OVER_CAPACITY)) {
-            Snackbar.make(view, "R/Image is temporarily over capacity. Please try again", Snackbar.LENGTH_LONG).show();
-        } else if (error.equals(RETROFIT_NO_CONNECTION) || error.equals(RETROFIT_NO_HOST)) {
-            Snackbar.make(view, "Not connected to the interweb", Snackbar.LENGTH_LONG).show();
+
+        if (error.equals(REST_ERRORS.IMGUR_OVER_CAPACITY)) {
+            Snackbar.make(mView, "R/Image is temporarily over capacity. Please try again", Snackbar.LENGTH_LONG).show();
+        } else if (error.equals(    REST_ERRORS.RETROFIT_NO_CONNECTION) || error.equals(REST_ERRORS.RETROFIT_NO_HOST)) {
+            Snackbar.make(mView, "Not connected to the interweb", Snackbar.LENGTH_LONG).show();
         } else {
-            Snackbar.make(view, "Please try a diferent curruntSubreddit", Snackbar.LENGTH_LONG).show();
+            Snackbar.make(mView, "Please try a diferent mCurrentSubreddit", Snackbar.LENGTH_LONG).show();
         }
 
-        rv.setVisibility(View.VISIBLE);
-        progressBar.setVisibility(View.INVISIBLE);
+        mRv.setVisibility(View.VISIBLE);
+        mProgressBar.setVisibility(View.INVISIBLE);
     }
 
 
@@ -512,14 +496,14 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
         super.onSaveInstanceState(outState);
 
 
-        outState.putString("SUBREDDIT", curruntSubreddit);
+        outState.putString("SUBREDDIT", mCurrentSubreddit);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
 
-        curruntSubreddit = savedInstanceState.getString("SUBREDDIT");
+        mCurrentSubreddit = savedInstanceState.getString("SUBREDDIT");
     }
 
 
@@ -531,10 +515,6 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
             Log.d("MyMainActivity", "item.getItemId() == android.R.id.home");
 
             mDrawerLayout.openDrawer(GravityCompat.START);
-            // Set up the drawer.
-
-            //navViewTextView.setText("/R/" + curruntSubreddit);
-            //Snackbar.make(view, "Ah ah ah, you didn't say the magic word", Snackbar.LENGTH_LONG).show();
             return true;
         } else {
             Log.d("MyMainActivity", "Logout");
@@ -549,10 +529,9 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         Log.d("MyMainActivity", "position: " + position);
-//        Snackbar.make(view, "position: " + searchedSubreddits.get(position),
-//                Snackbar.LENGTH_SHORT).show();
+
         mDrawerLayout.closeDrawers();
-        apiCall(searchedSubreddits.get(position));
-        curruntSubreddit = searchedSubreddits.get(position);
+        rxCall(mSearchedSubreddits.get(position));
+        mCurrentSubreddit = mSearchedSubreddits.get(position);
     }
 }
