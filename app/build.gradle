@@ -55,12 +55,13 @@ dependencies {
 
 
     compile 'com.google.code.gson:gson:2.6.1'
-    compile 'com.squareup.retrofit2:retrofit:2.0.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.0.0'
+
     compile 'com.squareup.okhttp3:okhttp:3.1.2'
 
 
-
+    compile 'com.squareup.retrofit:retrofit:1.9.+'
+    compile 'io.reactivex:rxjava:1.0.+'
+    compile 'io.reactivex:rxandroid:0.23.+'
 
     compile 'com.github.bumptech.glide:glide:3.6.1'
 
