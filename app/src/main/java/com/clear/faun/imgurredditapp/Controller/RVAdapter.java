@@ -150,6 +150,7 @@ public class RVAdapter  extends RecyclerView.Adapter<RVAdapter.ImgurViewHolder> 
             Log.i("MyRVAdapter", "mPosition " + mPosition);
 
 <<<<<<< HEAD:app/src/main/java/com/clear/faun/imgurredditapp/Controller/RVAdapter.java
+<<<<<<< HEAD:app/src/main/java/com/clear/faun/imgurredditapp/Controller/RVAdapter.java
 <<<<<<< HEAD:app/src/main/java/com/clear/faun/imgurredditapp/adapter/RVAdapter.java
 //            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 //                Log.i("MyRVAdapter", "onClick on lolipop");
@@ -196,10 +197,24 @@ public class RVAdapter  extends RecyclerView.Adapter<RVAdapter.ImgurViewHolder> 
                         makeSceneTransitionAnimation(mActivity, pair1, pair2);
 //                ActivityOptionsCompat options = ActivityOptionsCompat.
 >>>>>>> parent of c7eac60... not working build with member variables.:app/src/main/java/com/clear/faun/imgurredditapp/adapter/RVAdapter.java
+=======
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                Log.i("MyRVAdapter", "onClick on lolipop");
+
+                Pair<View, String> pair1 = Pair.create((View)imageView, "profile1");
+                Pair<View, String> pair2 = Pair.create((View)imageTittle, "transition1");
+                Intent intent = new Intent(mActivity, DetailViewActivity.class);
+                intent.putExtra(DetailViewActivity.IMAGE_URL_KEY, imgurContainers.getImgurData().get(mPosition).getLink());
+                intent.putExtra(DetailViewActivity.IMAGE_TITTLE_KEY, imgurContainers.getImgurData().get(mPosition).getTitle());
+                ActivityOptionsCompat options = ActivityOptionsCompat.
+                        makeSceneTransitionAnimation(mActivity, pair1, pair2);
+//                ActivityOptionsCompat options = ActivityOptionsCompat.
+>>>>>>> parent of c7eac60... not working build with member variables.:app/src/main/java/com/clear/faun/imgurredditapp/adapter/RVAdapter.java
 //                        .makeSceneTransitionAnimation(mActivity, pair1 , pair2);
                 mActivity.startActivity(intent, options.toBundle());
             }else{
 
+<<<<<<< HEAD:app/src/main/java/com/clear/faun/imgurredditapp/Controller/RVAdapter.java
 <<<<<<< HEAD:app/src/main/java/com/clear/faun/imgurredditapp/Controller/RVAdapter.java
                 Intent intent = new Intent(mActivity, DetailView.class);
                 intent.putExtra(DetailView.IMAGE_URL_KEY, "http://i.imgur.com/Mb6AMg0.jpg");
@@ -208,11 +223,16 @@ public class RVAdapter  extends RecyclerView.Adapter<RVAdapter.ImgurViewHolder> 
             }
 >>>>>>> parent of dd49c4f... changed file system.:app/src/main/java/com/clear/faun/imgurredditapp/Controller/RVAdapter.java
 =======
+=======
+>>>>>>> parent of c7eac60... not working build with member variables.:app/src/main/java/com/clear/faun/imgurredditapp/adapter/RVAdapter.java
                 Intent intent = new Intent(mActivity, DetailViewActivity.class);
                 intent.putExtra(DetailViewActivity.IMAGE_URL_KEY, "http://i.imgur.com/Mb6AMg0.jpg");
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 mActivity.startActivity(intent);
             }
+<<<<<<< HEAD:app/src/main/java/com/clear/faun/imgurredditapp/Controller/RVAdapter.java
+>>>>>>> parent of c7eac60... not working build with member variables.:app/src/main/java/com/clear/faun/imgurredditapp/adapter/RVAdapter.java
+=======
 >>>>>>> parent of c7eac60... not working build with member variables.:app/src/main/java/com/clear/faun/imgurredditapp/adapter/RVAdapter.java
 
 

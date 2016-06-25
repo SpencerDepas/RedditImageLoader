@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
     private ArrayList<String> searchedSubreddits = new ArrayList<>();
     private Context mContext;
 <<<<<<< HEAD:app/src/main/java/com/clear/faun/imgurredditapp/Controller/MainActivity.java
+<<<<<<< HEAD:app/src/main/java/com/clear/faun/imgurredditapp/Controller/MainActivity.java
 <<<<<<< HEAD:app/src/main/java/com/clear/faun/imgurredditapp/ui/activity/MainActivity.java
     private String mCurrentSubreddit = "NYCSTREETART";
     private SharedPreferences mPref;
@@ -79,14 +80,20 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
 =======
 =======
 >>>>>>> parent of c7eac60... not working build with member variables.:app/src/main/java/com/clear/faun/imgurredditapp/ui/activity/MainActivity.java
+=======
+>>>>>>> parent of c7eac60... not working build with member variables.:app/src/main/java/com/clear/faun/imgurredditapp/ui/activity/MainActivity.java
     private CallAndParseRetrofitTwo callAndParse;
     private String curruntSubreddit = "NYCSTREETART";
     private SharedPreferences pref;
     private Gson gson;
     private RealmDatabase database;
 <<<<<<< HEAD:app/src/main/java/com/clear/faun/imgurredditapp/Controller/MainActivity.java
+<<<<<<< HEAD:app/src/main/java/com/clear/faun/imgurredditapp/Controller/MainActivity.java
     private  RVAdapter rvAdapter;
 >>>>>>> parent of dd49c4f... changed file system.:app/src/main/java/com/clear/faun/imgurredditapp/Controller/MainActivity.java
+=======
+    private RVAdapter rvAdapter;
+>>>>>>> parent of c7eac60... not working build with member variables.:app/src/main/java/com/clear/faun/imgurredditapp/ui/activity/MainActivity.java
 =======
     private RVAdapter rvAdapter;
 >>>>>>> parent of c7eac60... not working build with member variables.:app/src/main/java/com/clear/faun/imgurredditapp/ui/activity/MainActivity.java
