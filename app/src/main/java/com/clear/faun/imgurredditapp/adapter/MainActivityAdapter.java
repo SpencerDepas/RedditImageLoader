@@ -1,13 +1,8 @@
 package com.clear.faun.imgurredditapp.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Point;
 
-import android.os.Build;
-
-import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Display;
@@ -19,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.clear.faun.imgurredditapp.ui.activity.DetailViewActivity;
 import com.clear.faun.imgurredditapp.ui.activity.MainActivity;
 import com.clear.faun.imgurredditapp.model.ImgurContainer;
 import com.clear.faun.imgurredditapp.R;
@@ -27,7 +21,7 @@ import com.clear.faun.imgurredditapp.R;
 /**
  * Created by spencer on 9/6/2015.
  */
-public class RVAdapter  extends RecyclerView.Adapter<RVAdapter.ImgurViewHolder> {
+public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapter.ImgurViewHolder> {
 
     private Context mContext;
     private int width = 0;
@@ -37,7 +31,7 @@ public class RVAdapter  extends RecyclerView.Adapter<RVAdapter.ImgurViewHolder> 
     private RecyclerView recyclerView;
 
     //AdapterView.OnItemClickListener mItemClickListener;
-    public RVAdapter(){
+    public MainActivityAdapter(){
 
     }
     public static MainActivity mActivity;
@@ -46,7 +40,7 @@ public class RVAdapter  extends RecyclerView.Adapter<RVAdapter.ImgurViewHolder> 
 
 
     public void setInfo(ImgurContainer imgurContainers, Context mContext,  MainActivity mActivity) {
-        Log.i("MyRVAdapter", "RVAdapter " );
+        Log.i("MyRVAdapter", "MainActivityAdapter " );
         this.imgurContainers = imgurContainers;
         this.mContext = mContext;
         this.mActivity = mActivity;

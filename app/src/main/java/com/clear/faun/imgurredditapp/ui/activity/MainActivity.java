@@ -32,7 +32,8 @@ import android.widget.TextView;
 
 
 import com.bumptech.glide.Glide;
-import com.clear.faun.imgurredditapp.adapter.RVAdapter;
+import com.clear.faun.imgurredditapp.adapter.MainActivityAdapter;
+import com.clear.faun.imgurredditapp.client.RxCallAndParse;
 import com.clear.faun.imgurredditapp.client.ServiceFactory;
 import com.clear.faun.imgurredditapp.interfaces.ImgurAPI;
 import com.clear.faun.imgurredditapp.model.REST_ERRORS;
@@ -49,6 +50,7 @@ import butterknife.OnClick;
 import com.crashlytics.android.Crashlytics;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import io.fabric.sdk.android.Fabric;
 import rx.Subscriber;
@@ -65,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
     private String mCurrentSubreddit = "NYCSTREETART";
     private SharedPreferences mPref;
     private RealmDatabase mDatabase;
-    private RVAdapter mRvAdapter;
+    private MainActivityAdapter mRvAdapter;
     private ImgurContainer mImgurContainers;
     private NavigationViewFragment mNavigationDrawerFragment;
 
@@ -75,19 +77,25 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
 
     @Bind(R.id.main_content)
     View mView;
+
     @Bind(R.id.backdrop)
     ImageView mBannerImageView;
+
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
+
     @Bind(R.id.progressBar)
     ProgressBar mProgressBar;
+
     @Bind(R.id.rv)
     RecyclerView mRv;
+
     @Bind(R.id.fab)
     FloatingActionButton mFab;
     @Bind(R.id.collapsing_toolbar)
     CollapsingToolbarLayout mCollapsingToolbar;
 
+    private RxCallAndParse rxCallAndParse ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,7 +137,9 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
 
 
         mRv.setLayoutManager(new GridLayoutManager(this, 2));
-        mRvAdapter = new RVAdapter();
+        mRvAdapter = new MainActivityAdapter();
+
+        rxCallAndParse = new RxCallAndParse(this);
 
 
     }
@@ -144,6 +154,7 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
+
 
 
     private void setUpNavView() {
@@ -169,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
                     @Override
                     public final void onCompleted() {
                         // do nothing
-                        Timber.i("onCompleted : " );
+                        Timber.i("onCompleted : ");
 
                     }
 
@@ -181,7 +192,7 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
 
                     @Override
                     public final void onNext(ImgurContainer response) {
-                        Timber.i("onNext : " );
+                        Timber.i("onNext : ");
 
                         loadedRX(response);
 
@@ -206,6 +217,7 @@ public class MainActivity extends AppCompatActivity implements ImgurResponse,
 
 
         if (mImgurContainers == null) {
+            rxCallAndParse.subRedditApiCall(mCurrentSubreddit);
             rxCall(mCurrentSubreddit);
         }
 
